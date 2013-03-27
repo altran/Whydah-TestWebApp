@@ -1,6 +1,6 @@
-package no.whydah.sso.web;
+package org.whydah.sso.web;
 
-import no.whydah.sso.web.util.SSOHelper;
+import org.whydah.sso.web.util.SSOHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

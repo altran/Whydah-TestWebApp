@@ -1,4 +1,4 @@
-package no.whydah.sso.web;
+package org.whydah.sso.web;
 
 import junit.framework.TestCase;
 

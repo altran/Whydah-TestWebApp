@@ -1,4 +1,4 @@
-package no.whydah.sso.web;
+package org.whydah.sso.web;
 
 
 import org.junit.AfterClass;
@@ -188,7 +188,7 @@ public class CookieTest {
 
     @Test
     public void testCookieStore() {
-        String domain = "localhost"; //"whydah.no";
+        String domain = "localhost"; //"whydah.org";
         String path = "obosusertoken";
         Map<String, Map<String, String>> domainStore = store.get(domain);
         if (domainStore == null) return;

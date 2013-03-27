@@ -1,8 +1,8 @@
-package no.whydah.sso.web.util;
+package org.whydah.sso.web.util;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import no.whydah.sso.web.data.ApplicationCredential;
+import org.whydah.sso.web.data.ApplicationCredential;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
