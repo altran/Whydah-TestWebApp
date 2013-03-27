@@ -102,7 +102,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>no.whydah.sso.web.ServerRunner</mainClass>
+                    <mainClass>org.whydah.sso.web.ServerRunner</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -112,7 +112,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>no.whydah.sso.web.ServerRunner</Main-Class>
+                            <Main-Class>org.whydah.sso.web.ServerRunner</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

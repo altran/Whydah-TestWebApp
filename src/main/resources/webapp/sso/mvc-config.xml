@@ -19,7 +19,7 @@
     <mvc:resources mapping="/css/**" location="/, classpath:/css/" />
 
 
-	<context:component-scan base-package="no.whydah.sso.web" />
+	<context:component-scan base-package="org.whydah.sso.web" />
 
 	<mvc:annotation-driven />
 
