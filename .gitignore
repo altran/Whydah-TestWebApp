@@ -9,3 +9,6 @@ target/
 #IDE files#
 .idea/
 *.iml
+/.settings
+/.project
+/.classpath
