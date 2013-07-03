@@ -22,7 +22,7 @@ import java.net.UnknownHostException;
 @Controller
 public class LoginController {
     private final SSOHelper sso = new SSOHelper();
-    static String USER_TOKEN_REFERENCE_NAME = "obosusertoken";
+    static String USER_TOKEN_REFERENCE_NAME = "usertokenid";
     static String REDIRECT_TO_LOGIN_SERVICE = "redirect:http://"+getHost()+":9997/sso/login" + "?redirectURI=http://"+getHost()+":9990/test/hello";
     static String REDIRECT_TO_LOGOUT_SERVICE = "redirect:http://"+getHost()+":9997/sso/logout" + "?redirectURI=http://"+getHost()+":9990/test/hello";
     static String LOGOUT_SERVICE = "http://"+getHost()+":9997/sso/logoutaction" + "?redirectURI=http://"+getHost()+":9990/test/logout";
