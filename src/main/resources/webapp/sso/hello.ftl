@@ -4,14 +4,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-Hei ${realname}
+Hi ${realname}
 <br/>
 <br/>
-Du har n&aring; logget p&aring; OBOS SSO.<br/>
+You have been logged on to Whydah SSO.<br/>
 <br/>
 <a href="${logouturl}">Log out</a><br/>
 <br/>
-Vi har registrert f&oslash;lgende rettigheter p&aring; din bruker:
+We have registered the following privileges on your user:
 <br/>
 <br/>
 <TEXTAREA NAME="usercredential" COLS=150 ROWS=50>${token}</TEXTAREA>

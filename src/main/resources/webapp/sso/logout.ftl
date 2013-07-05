@@ -4,12 +4,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-Hei!
+Hi!
 <br/>
 <br/>
-Du har n&aring; logget av OBOS SSO.
+You have been logged out of Whydah SSO.
 <br/>
-<a href="hello">Logg p&aring;</a>
+<a href="hello">Log on</a>
 <br/>
 </body>
 </html>

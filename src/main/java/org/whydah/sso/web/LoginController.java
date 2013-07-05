@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -22,7 +23,7 @@ import java.net.UnknownHostException;
 @Controller
 public class LoginController {
     private final SSOHelper sso = new SSOHelper();
-    static String USER_TOKEN_REFERENCE_NAME = "usertokenid";
+    static String USER_TOKEN_REFERENCE_NAME = "whydahusertoken";
     static String REDIRECT_TO_LOGIN_SERVICE = "redirect:http://"+getHost()+":9997/sso/login" + "?redirectURI=http://"+getHost()+":9990/test/hello";
     static String REDIRECT_TO_LOGOUT_SERVICE = "redirect:http://"+getHost()+":9997/sso/logout" + "?redirectURI=http://"+getHost()+":9990/test/hello";
     static String LOGOUT_SERVICE = "http://"+getHost()+":9997/sso/logoutaction" + "?redirectURI=http://"+getHost()+":9990/test/logout";
@@ -46,11 +47,14 @@ public class LoginController {
 
         if (hasRightCookie(request)) {
             model.addAttribute("greeting", "Hello world!\n");
-            System.out.println("Looking for userTokenID (Cookie):" + sso.getUserToken(getUserTokenIdFromCookie(request)));
-            if (sso.getUserToken(getUserTokenIdFromCookie(request)).length() > 10) {
-                model.addAttribute("token", sso.getUserToken(getUserTokenIdFromCookie(request)));
+            String userTokenIdFromCookie = getUserTokenIdFromCookie(request);
+            String userToken = sso.getUserToken(userTokenIdFromCookie);
+			System.out.println("Looking for userTokenID (Cookie):" + userToken);
+            
+			if (sso.getUserToken(userTokenIdFromCookie).length() > 10) {
+                model.addAttribute("token", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname",getRealName(sso.getUserToken(userTokenID)));
+                model.addAttribute("realname",getRealName(userToken));
                 return "hello";
             } else {
                 removeUserTokenCookie(request, response);
