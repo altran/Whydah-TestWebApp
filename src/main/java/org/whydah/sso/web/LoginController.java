@@ -1,11 +1,9 @@
 package org.whydah.sso.web;
 
-import org.whydah.sso.web.util.SSOHelper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,18 +14,49 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-import java.io.StringReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.w3c.dom.Document;
+import org.whydah.sso.config.AppConfig;
+import org.whydah.sso.web.util.SSOHelper;
+import org.xml.sax.InputSource;
 
 @Controller
 public class LoginController {
-    private final SSOHelper sso = new SSOHelper();
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	
+	private final SSOHelper sso;
     static String USER_TOKEN_REFERENCE_NAME = "whydahusertoken";
-    static String REDIRECT_TO_LOGIN_SERVICE = "redirect:http://"+getHost()+":9997/sso/login" + "?redirectURI=http://"+getHost()+":9990/test/hello";
-    static String REDIRECT_TO_LOGOUT_SERVICE = "redirect:http://"+getHost()+":9997/sso/logout" + "?redirectURI=http://"+getHost()+":9990/test/hello";
-    static String LOGOUT_SERVICE = "http://"+getHost()+":9997/sso/logoutaction" + "?redirectURI=http://"+getHost()+":9990/test/logout";
+    static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/sso/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
+    static String REDIRECT_TO_LOGOUT_SERVICE; // = "redirect:http://"+getHost()+":" + SSO_PORT + "/sso/logout" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
+    static String LOGOUT_SERVICE; // = "http://"+getHost()+":" + SSO_PORT + "/sso/logoutaction" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/logout";
+    
+    public LoginController() {
+    	sso = new SSOHelper();
 
+    	try {
+    		String myUri = AppConfig.readProperties().getProperty("myuri");
+    		String ssoHostUri = AppConfig.readProperties().getProperty("logonserviceurl");
+    		if (null == myUri) {
+    			myUri = getHost();
+    		}
+    		if (null == ssoHostUri) {
+    			ssoHostUri = getHost();
+    		}
+	    	
+	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoHostUri + "login?redirectURI=" + myUri + "hello";;
+	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoHostUri + "logout?redirectURI=" + myUri + "hello";
+	    	LOGOUT_SERVICE = ssoHostUri + "logoutaction?redirectURI=" + myUri + "logout";
+
+    	} catch (IOException e) {
+			logger.error("Unable to read properties from file.");
+			throw new RuntimeException("Unable to read properties", e);
+		}
+    }
+    
     @RequestMapping("/hello")
     public String hello(HttpServletRequest request, HttpServletResponse response, Model model) {
 
@@ -100,14 +129,7 @@ public class LoginController {
 
             String myIp = null;
             for (InetAddress addr : addrs) {
-                //System.out.println("addr.getHostAddress() = " + addr.getHostAddress());
-                //System.out.println("addr.getHostName() = " + addr.getHostName());
-                //System.out.println("addr.isAnyLocalAddress() = " + addr.isAnyLocalAddress());
-                //System.out.println("addr.isLinkLocalAddress() = " + addr.isLinkLocalAddress());
-                //System.out.println("addr.isLoopbackAddress() = " + addr.isLoopbackAddress());
-                //System.out.println("addr.isMulticastAddress() = " + addr.isMulticastAddress());
-                //System.out.println("addr.isSiteLocalAddress() = " + addr.isSiteLocalAddress());
-                //System.out.println("");
+                printDebugInfo(addr);
 
                 if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()) {
                     myIp = addr.getHostAddress();
@@ -120,6 +142,17 @@ public class LoginController {
         }
         return host;
     }
+
+	private static void printDebugInfo(InetAddress addr) {
+		System.out.println("addr.getHostAddress() = " + addr.getHostAddress());
+		System.out.println("addr.getHostName() = " + addr.getHostName());
+		System.out.println("addr.isAnyLocalAddress() = " + addr.isAnyLocalAddress());
+		System.out.println("addr.isLinkLocalAddress() = " + addr.isLinkLocalAddress());
+		System.out.println("addr.isLoopbackAddress() = " + addr.isLoopbackAddress());
+		System.out.println("addr.isMulticastAddress() = " + addr.isMulticastAddress());
+		System.out.println("addr.isSiteLocalAddress() = " + addr.isSiteLocalAddress());
+		System.out.println("");
+	}
 
     private void removeUserTokenCookie(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = getUserTokenCookie(request);
