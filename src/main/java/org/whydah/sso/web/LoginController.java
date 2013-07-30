@@ -40,17 +40,22 @@ public class LoginController {
     	try {
     		String myUri = AppConfig.readProperties().getProperty("myuri");
     		String ssoHostUri = AppConfig.readProperties().getProperty("logonserviceurl");
+    		
     		if (null == myUri) {
     			myUri = getHost();
     		}
     		if (null == ssoHostUri) {
     			ssoHostUri = getHost();
     		}
+	    	logger.info("myUri: {}", myUri);
+	    	logger.info("ssoHostUri: {}", ssoHostUri);
 	    	
 	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoHostUri + "login?redirectURI=" + myUri + "hello";;
 	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoHostUri + "logout?redirectURI=" + myUri + "hello";
 	    	LOGOUT_SERVICE = ssoHostUri + "logoutaction?redirectURI=" + myUri + "logout";
 
+	    	logger.info("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
+	    	
     	} catch (IOException e) {
 			logger.error("Unable to read properties from file.");
 			throw new RuntimeException("Unable to read properties", e);
