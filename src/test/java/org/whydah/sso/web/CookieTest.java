@@ -189,7 +189,7 @@ public class CookieTest {
     @Test
     public void testCookieStore() {
         String domain = "localhost"; //"whydah.org";
-        String path = "obosusertoken";
+        String path = "whydahusertoken";
         Map<String, Map<String, String>> domainStore = store.get(domain);
         if (domainStore == null) return;
         StringBuffer cookieStringBuffer = new StringBuffer();
