@@ -4,7 +4,7 @@
     <groupId>net.whydah.sso.web</groupId>
     <artifactId>Whydah-TestWebApp</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Whydah-TestWebApp</name>
     <url>https://wiki.cantara.no/display/iam/TestWebApp</url>
     <dependencies>
