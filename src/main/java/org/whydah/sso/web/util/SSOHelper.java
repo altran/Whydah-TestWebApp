@@ -44,6 +44,7 @@ public class SSOHelper {
     }
 
     private PostMethod setUpApplicationLogon() {
+        //TODO baardl Implement application credential
         String requestXML = "";
         PostMethod p = new PostMethod(r.path("/logon").toString());
         p.addParameter("applicationcredential",requestXML);
