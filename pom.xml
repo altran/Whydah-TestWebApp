@@ -105,6 +105,18 @@
             <artifactId>logback-classic</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <!-- Bridge commons-logging commons-httpclient -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.6</version>
+        </dependency>
 
 
         <dependency>
