@@ -5,14 +5,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.whydah.sso.config.ApplicationMode;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.net.*;
-import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.text.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +35,8 @@ public class CookieTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        System.setProperty(ApplicationMode.IAM_MODE_KEY, ApplicationMode.TEST_L);
+
         serverRunner = new ServerRunner();
         serverRunner.start();
     }
