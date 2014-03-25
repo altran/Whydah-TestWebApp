@@ -3,27 +3,50 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.whydah.sso.web</groupId>
     <artifactId>Whydah-TestWebApp</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>Whydah-TestWebApp</name>
     <url>https://wiki.cantara.no/display/iam/TestWebApp</url>
+
+    <properties>
+        <jersey-version>1.5</jersey-version>
+        <spring-version>3.0.5.RELEASE</spring-version>
+        <jetty-version>7.3.0.v20110203</jetty-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>altran-releases</id>
+            <url>http://mvnrepo.cantara.no/content/repositories/altran-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>altran-snapshots</id>
+            <url>http://mvnrepo.cantara.no/content/repositories/altran-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>${jersey-version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -49,15 +72,11 @@
             <artifactId>spring-beans</artifactId>
             <version>${spring-version}</version>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.16</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -69,23 +88,32 @@
             <artifactId>jetty-servlet</artifactId>
             <version>${jetty-version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.16</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
+            <version>1.7.6</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>0.9.27</version>
-        </dependency>        
+            <version>1.1.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-    <properties>
-        <jersey-version>1.5</jersey-version>
-        <spring-version>3.0.5.RELEASE</spring-version>
-        <jetty-version>7.3.0.v20110203</jetty-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <plugins>
@@ -95,8 +123,8 @@
                 <version>2.3.2</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -163,31 +191,12 @@
         </plugins>
         <pluginManagement>
             <plugins>
-              <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>1.0-beta-2</version>
-              </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>1.0-beta-2</version>
+                </plugin>
             </plugins>
-          </pluginManagement>
+        </pluginManagement>
     </build>
-    <repositories>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-    <distributionManagement>
-           <repository>
-	    <id>altran-releases</id>
-	    <url>http://mvnrepo.cantara.no/content/repositories/altran-releases</url>
-	  </repository>
-	  <snapshotRepository>
-	    <id>altran-snapshots</id>
-	    <url>http://mvnrepo.cantara.no/content/repositories/altran-snapshots</url>
-	  </snapshotRepository>
-    </distributionManagement>    
-
 </project>
