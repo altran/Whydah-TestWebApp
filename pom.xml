@@ -7,12 +7,31 @@
     <name>Whydah-TestWebApp</name>
     <url>https://wiki.cantara.no/display/iam/TestWebApp</url>
 
+    <developers>
+        <developer>
+            <id>baardl</id>
+            <name>Bard Lind</name>
+            <email>bard.lind@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <organization>Altran Norge AS</organization>
+            <organizationUrl>http://www.altran.no/</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <jersey-version>1.5</jersey-version>
         <spring-version>3.0.5.RELEASE</spring-version>
         <jetty-version>7.3.0.v20110203</jetty-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git@github.com:altran/Whydah-TestWebApp.git</developerConnection>
+        <connection>scm:git:https://github.com/altran/Whydah-TestWebApp.git</connection>
+        <url>https://github.com/altran/Whydah-TestWebApp</url>
+    </scm>
 
     <repositories>
         <repository>
@@ -22,6 +41,18 @@
             <layout>default</layout>
         </repository>
     </repositories>
+    <distributionManagement>
+        <repository>
+            <id>cantara</id>
+            <name>Cantara Release Repository</name>
+            <url>dav:http://mvnrepo.cantara.no/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>cantara</id>
+            <name>Cantara Snapshot Repository</name>
+            <url>dav:http://mvnrepo.cantara.no/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
