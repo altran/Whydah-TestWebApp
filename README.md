@@ -9,3 +9,11 @@ TODO:
 * Fix logos / styles to get a Whydah-style
 
 ![Architectural Overview](https://raw2.github.com/altran/Whydah-SSOLoginWebApp/master/Whydah%20infrastructure.png)
+
+Installation
+============
+
+
+
+* create a user for the service
+* run start_service.sh
