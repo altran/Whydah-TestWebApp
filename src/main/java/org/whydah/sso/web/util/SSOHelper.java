@@ -34,7 +34,7 @@ public class SSOHelper {
                 System.out.println("Internal error");
 // retry
             }
-            System.out.println(p.getResponseBodyAsString());
+            System.out.println(p.getResponseBodyAsStream());
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -92,7 +92,7 @@ public class SSOHelper {
             }
 //            System.out.println("Request:"+p2.
             System.out.println("v:"+v);
-            System.out.println("Response:"+p2.getResponseBodyAsString());
+            System.out.println("Response:"+p2.getResponseBodyAsStream());
             return p2.getResponseBodyAsString();
 
 
