@@ -72,7 +72,7 @@ public class SSOHelper {
                 System.out.println("Internal error");
 // retry
             }
-            System.out.println("ApplicationToken:"+p.getResponseBodyAsString());
+            System.out.println("ApplicationToken:"+p.getResponseBodyAsStream());
             PostMethod p2 = setUpGetUserToken(p,usertokenid);
             v = c.executeMethod(p2);
             if (v == 201) {
@@ -123,7 +123,7 @@ public class SSOHelper {
 
     private PostMethod setupRealApplicationLogon() {
         ApplicationCredential acred = new ApplicationCredential();
-        acred.setApplicationID("Styrerommet");
+        acred.setApplicationID("SSOTestWebApp");
         acred.setApplicationPassord("dummy");
 
 
