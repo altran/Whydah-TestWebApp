@@ -34,47 +34,6 @@ public class UserDetailsImpl implements User<String>, UserDetails {
 		admin = true;
 	}
 
-	/**
-	 * Takes a user entity from the database and populates a new {@link UserDetails} object to be used in spring security
-	 * 
-	 * @param user
-	 *            The user entity from the database
-	 */
-	public UserDetailsImpl(UserImpl user) {
-		this.userId = ""+user.getUserId();
-		this.username = user.getEmail();
-		this.password = user.getPassword();
-		this.salt = user.getSalt();
-		this.expired = user.getPasswordValid() == null ? false : user.getPasswordValid().before(new Date());
-		this.temporaryPassword = user.isTemporaryPassword();
-		this.admin = user.isAdmin();
-		this.countryId = user.getCountry() == null ? null : user.getCountry().getCountryId();
-
-		authorities.add(new SimpleGrantedAuthority(Roles.User));
-		authorities.add(new SimpleGrantedAuthority(Roles.Admin));
-		if (user.isAdmin()) {
-			authorities.add(new SimpleGrantedAuthority(Roles.GlobalAdmin));
-		}
-
-		this.firstName = user.getFirstName();
-		this.middleName = user.getMiddleName();
-		this.lastName = user.getLastName();
-
-		StringBuilder sb = new StringBuilder();
-		if (user.getFirstName() != null && !user.getFirstName().trim().isEmpty()) {
-			sb.append(user.getFirstName().trim());
-			if (user.getMiddleName() != null && !user.getMiddleName().trim().isEmpty()) {
-				sb.append(' ');
-				sb.append(user.getMiddleName().trim());
-			}
-			if (user.getLastName() != null && !user.getLastName().trim().isEmpty()) {
-				sb.append(' ');
-				sb.append(user.getLastName().trim());
-			}
-		}
-		this.fullName = sb.toString();
-	}
-
 	public UserDetailsImpl(WhydahLogonToken logonToken, WhydahUserToken userToken) {
 		userId = userToken.getId();
 		countryId = null; //TODO
