@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.QueryParam;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -63,15 +64,15 @@ public class LoginController {
     }
     
     @RequestMapping("/hello")
-    public String hello(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String hello(@QueryParam("userticket") String userticket, HttpServletRequest request, HttpServletResponse response, Model model) {
 
-        String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
-        if (userTokenID != null && userTokenID.length() > 3) {
-            System.out.println("Looking for userTokenID (URL param):" + userTokenID);
-            if (sso.getUserToken(userTokenID).length() > 10) {
-                model.addAttribute("token", sso.getUserToken(userTokenID));
+        //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
+        if (userticket != null && userticket.length() > 3) {
+            System.out.println("Looking for userTokenID (URL param):" + userticket);
+            if (sso.getUserToken(userticket).length() > 10) {
+                model.addAttribute("token", sso.getUserToken(userticket));
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname",getRealName(sso.getUserToken(userTokenID)));
+                model.addAttribute("realname",getRealName(sso.getUserToken(userticket)));
                 return "hello";
             } else {
                 removeUserTokenCookie(request, response);

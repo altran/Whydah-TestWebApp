@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 
 public class SSOHelper {
-    private static final URI BASE_URI = UriBuilder.fromUri("http://localhost/tokenservice/").port(9998).build();
+    private static final URI BASE_URI = UriBuilder.fromUri("https://sso.altran.se/tokenservice/").port(443).build(); //TODO: DO NOT HARDCODE
     private WebResource r;
 
     public SSOHelper(){
@@ -108,13 +108,13 @@ public class SSOHelper {
     private PostMethod setUpGetUserToken(PostMethod p,String userTokenid) throws IOException {
         String appTokenXML = p.getResponseBodyAsString();
         String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtoken>") + "<applicationtoken>".length(), appTokenXML.indexOf("</applicationtoken>"));
-        String path = r.path("/iam/").toString() + appid + "/getusertokenbytokenid";
+        String path = r.path("/iam/").toString() + appid + "/getusertokenbyticket"; // r.path("/iam/")
 
         System.out.println("POST:"+path);
 
         PostMethod p2 = new PostMethod(path);
         p2.addParameter("apptoken",appTokenXML);
-        p2.addParameter("usertokenid",userTokenid);
+        p2.addParameter("ticket",userTokenid);
 
         System.out.println("apptoken:"+appTokenXML);
         System.out.println("usertokenid:"+userTokenid);
@@ -123,7 +123,7 @@ public class SSOHelper {
 
     private PostMethod setupRealApplicationLogon() {
         ApplicationCredential acred = new ApplicationCredential();
-        acred.setApplicationID("Styrerommet");
+        acred.setApplicationID("dummy");
         acred.setApplicationPassord("dummy");
 
 
