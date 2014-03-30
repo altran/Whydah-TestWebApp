@@ -93,7 +93,7 @@ public class SSOHelper {
 //            System.out.println("Request:"+p2.
             System.out.println("v:"+v);
             System.out.println("Response:"+p2.getResponseBodyAsStream());
-            return p2.getResponseBodyAsString();
+            return p2.getResponseBodyAsStream().toString();
 
 
         } catch (IOException ioe) {
@@ -106,9 +106,10 @@ public class SSOHelper {
 
 
     private PostMethod setUpGetUserToken(PostMethod p,String userTokenid) throws IOException {
-        String appTokenXML = p.getResponseBodyAsString();
-        String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtoken>") + "<applicationtoken>".length(), appTokenXML.indexOf("</applicationtoken>"));
-        String path = r.path("/iam/").toString() + appid + "/getusertokenbytokenid";
+        String appTokenXML = p.getResponseBodyAsStream().toString();
+        System.out.println("Apptokenstring:"+appTokenXML);
+//        String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtoken>") + "<applicationtoken>".length(), appTokenXML.indexOf("</applicationtoken>"));
+        String path = r.path("/iam/").toString() + "56576" + "/getusertokenbytokenid";
 
         System.out.println("POST:"+path);
 
