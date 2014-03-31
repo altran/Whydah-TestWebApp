@@ -34,7 +34,7 @@ public class SSOHelper {
                 System.out.println("Internal error");
 // retry
             }
-            System.out.println(p.getResponseBodyAsString());
+            System.out.println(p.getResponseBodyAsStream());
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -72,7 +72,7 @@ public class SSOHelper {
                 System.out.println("Internal error");
 // retry
             }
-            System.out.println("ApplicationToken:"+p.getResponseBodyAsString());
+            System.out.println("ApplicationToken:"+p.getResponseBodyAsStream());
             PostMethod p2 = setUpGetUserToken(p,usertokenid);
             v = c.executeMethod(p2);
             if (v == 201) {
@@ -92,8 +92,8 @@ public class SSOHelper {
             }
 //            System.out.println("Request:"+p2.
             System.out.println("v:"+v);
-            System.out.println("Response:"+p2.getResponseBodyAsString());
-            return p2.getResponseBodyAsString();
+            System.out.println("Response:"+p2.getResponseBodyAsStream());
+            return p2.getResponseBodyAsStream().toString();
 
 
         } catch (IOException ioe) {
@@ -106,9 +106,11 @@ public class SSOHelper {
 
 
     private PostMethod setUpGetUserToken(PostMethod p,String userTokenid) throws IOException {
+
         String appTokenXML = p.getResponseBodyAsString();
         String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtoken>") + "<applicationtoken>".length(), appTokenXML.indexOf("</applicationtoken>"));
         String path = r.path("/iam/").toString() + appid + "/getusertokenbyticket"; // r.path("/iam/")
+
 
         System.out.println("POST:"+path);
 
@@ -123,7 +125,7 @@ public class SSOHelper {
 
     private PostMethod setupRealApplicationLogon() {
         ApplicationCredential acred = new ApplicationCredential();
-        acred.setApplicationID("dummy");
+        acred.setApplicationID("SSOTestWebApp");
         acred.setApplicationPassord("dummy");
 
 
