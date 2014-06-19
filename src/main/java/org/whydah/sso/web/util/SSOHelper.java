@@ -108,7 +108,7 @@ public class SSOHelper {
     private PostMethod setUpGetUserToken(PostMethod p,String userTokenid) throws IOException {
 
         String appTokenXML = p.getResponseBodyAsString();
-        String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtoken>") + "<applicationtoken>".length(), appTokenXML.indexOf("</applicationtoken>"));
+        String appid = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
         String path = r.path("/iam/").toString() + appid + "/getusertokenbyticket"; // r.path("/iam/")
 
 

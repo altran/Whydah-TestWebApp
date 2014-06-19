@@ -90,7 +90,7 @@ var auth = ( function () {
         //Assume only one element named applicationtoken
         //var node = appTokenXML.getElementsByTagName("applicationtoken")[0];
         //var appTokenId = node.childNodes[0].nodeValue;   //Yes, this is the appTokenId
-        var appTokenId = appTokenXML.split('applicationtoken>')[1];
+        var appTokenId = appTokenXML.split('applicationtokenID>')[1];
         appTokenId = appTokenId.substring(0,appTokenId.length-2);
         console.log("appTokenId=" + appTokenId);
         return appTokenId;
