@@ -1,13 +1,13 @@
 <html>
 <head>
-  <title>Hello from SSOTestWebApp</title>
+  <title>Hello from Whydah Test WebApp</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 Hi ${realname}
 <br/>
 <br/>
-You have been logged on to Whydah SSO.<br/>
+You have been logged on to Whydah.<br/>
 <br/>
 <a href="${logouturl}">Log out</a><br/>
 <br/>

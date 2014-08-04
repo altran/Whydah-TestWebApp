@@ -27,52 +27,59 @@ import org.xml.sax.InputSource;
 
 @Controller
 public class LoginController {
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-	
-	private final SSOHelper sso;
-    static String USER_TOKEN_REFERENCE_NAME = "whydahusertoken";
-    static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/sso/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
-    static String REDIRECT_TO_LOGOUT_SERVICE; // = "redirect:http://"+getHost()+":" + SSO_PORT + "/sso/logout" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
-    static String LOGOUT_SERVICE; // = "http://"+getHost()+":" + SSO_PORT + "/sso/logoutaction" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/logout";
-    
+	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    static final String USER_TOKEN_REFERENCE_NAME = "whydahusertoken";
+
+    static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
+    static String REDIRECT_TO_LOGOUT_SERVICE; // = "redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/logout" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
+    static String LOGOUT_SERVICE; // = "http://"+getHost()+":" + SSO_PORT + "/ssoHelper/logoutaction" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/logout";
+
+    private String myUri;
+    private String ssoLoginWebappUri;
+    private String tokenServiceUri;
+
+    private final SSOHelper ssoHelper;
+
+
     public LoginController() {
-    	sso = new SSOHelper();
-
     	try {
-    		String myUri = AppConfig.readProperties().getProperty("myuri");
-    		String ssoHostUri = AppConfig.readProperties().getProperty("logonserviceurl");
-    		
-    		if (null == myUri) {
-    			myUri = getHost();
-    		}
-    		if (null == ssoHostUri) {
-    			ssoHostUri = getHost();
-    		}
-	    	logger.info("myUri: {}", myUri);
-	    	logger.info("ssoHostUri: {}", ssoHostUri);
-	    	
-	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoHostUri + "login?redirectURI=" + myUri + "hello";;
-	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoHostUri + "logout?redirectURI=" + myUri + "hello";
-	    	LOGOUT_SERVICE = ssoHostUri + "logoutaction?redirectURI=" + myUri + "logout";
+            myUri = AppConfig.readProperties().getProperty("myuri");
+            ssoLoginWebappUri = AppConfig.readProperties().getProperty("logonserviceurl");
+            tokenServiceUri = AppConfig.readProperties().getProperty("tokenservice");
 
-	    	logger.info("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
-	    	
+            if (myUri == null || ssoLoginWebappUri == null || tokenServiceUri == null) {
+                log.error("Urls not set correctly. Exiting. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
+                System.exit(1);
+            }
+
+	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoLoginWebappUri + "login?redirectURI=" + myUri + "hello";;
+	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoLoginWebappUri + "logout?redirectURI=" + myUri + "hello";
+	    	LOGOUT_SERVICE = ssoLoginWebappUri + "logoutaction?redirectURI=" + myUri + "logout";
+	    	log.debug("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
+            log.debug("REDIRECT_TO_LOGOUT_SERVICE: {}", REDIRECT_TO_LOGOUT_SERVICE);
+            log.debug("LOGOUT_SERVICE: {}", LOGOUT_SERVICE);
     	} catch (IOException e) {
-			logger.error("Unable to read properties from file.");
+			log.error("Unable to read properties from file.");
 			throw new RuntimeException("Unable to read properties", e);
 		}
+
+        log.info("LoginController initialized ok. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
+        log.info("Try the service at {}", myUri + "/hello");
+        ssoHelper = new SSOHelper(tokenServiceUri);
     }
-    
+
     @RequestMapping("/hello")
     public String hello(@QueryParam("userticket") String userticket, HttpServletRequest request, HttpServletResponse response, Model model) {
+        String applicationTokenXml = ssoHelper.logonApplication();
 
         //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
         if (userticket != null && userticket.length() > 3) {
-            System.out.println("Looking for userTokenID (URL param):" + userticket);
-            if (sso.getUserToken(userticket).length() > 10) {
-                model.addAttribute("token", sso.getUserToken(userticket));
+            log.debug("Looking for userTokenID (URL param):" + userticket);
+            String userToken = ssoHelper.getUserToken(applicationTokenXml, userticket);
+            if (userToken.length() > 10) {
+                model.addAttribute("token", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname",getRealName(sso.getUserToken(userticket)));
+                model.addAttribute("realname", getRealName(userToken));
                 return "hello";
             } else {
                 removeUserTokenCookie(request, response);
@@ -83,10 +90,10 @@ public class LoginController {
         if (hasRightCookie(request)) {
             model.addAttribute("greeting", "Hello world!\n");
             String userTokenIdFromCookie = getUserTokenIdFromCookie(request);
-            String userToken = sso.getUserToken(userTokenIdFromCookie);
-			System.out.println("Looking for userTokenID (Cookie):" + userToken);
+            String userToken = ssoHelper.getUserToken(ssoHelper.logonApplication(), userTokenIdFromCookie);
+			log.debug("Looking for userTokenID (Cookie):" + userToken);
             
-			if (sso.getUserToken(userTokenIdFromCookie).length() > 10) {
+			if (ssoHelper.getUserToken(ssoHelper.logonApplication(), userTokenIdFromCookie).length() > 10) {
                 model.addAttribute("token", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
                 model.addAttribute("realname",getRealName(userToken));
@@ -110,7 +117,7 @@ public class LoginController {
 
         Cookie cookie = new Cookie(USER_TOKEN_REFERENCE_NAME, "localhost");
         cookie.setValue(USER_TOKEN_REFERENCE_NAME);
-        //cookie.setMaxAge(new Long(Long.parseLong(getTokenMaxAge(10000 + sso.getUserToken())) - System.currentTimeMillis()).intValue()); // set
+        //cookie.setMaxAge(new Long(Long.parseLong(getTokenMaxAge(10000 + ssoHelper.getUserToken())) - System.currentTimeMillis()).intValue()); // set
         cookie.setMaxAge(100000);
         //cookie.setDomain("localhost");
         cookie.setValue("");
@@ -121,7 +128,6 @@ public class LoginController {
     @RequestMapping("/action")
     public String action(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("greeting", "Hello world!\n");
-
         return "action";
     }
 
@@ -150,14 +156,14 @@ public class LoginController {
     }
 
 	private static void printDebugInfo(InetAddress addr) {
-		System.out.println("addr.getHostAddress() = " + addr.getHostAddress());
-		System.out.println("addr.getHostName() = " + addr.getHostName());
-		System.out.println("addr.isAnyLocalAddress() = " + addr.isAnyLocalAddress());
-		System.out.println("addr.isLinkLocalAddress() = " + addr.isLinkLocalAddress());
-		System.out.println("addr.isLoopbackAddress() = " + addr.isLoopbackAddress());
-		System.out.println("addr.isMulticastAddress() = " + addr.isMulticastAddress());
-		System.out.println("addr.isSiteLocalAddress() = " + addr.isSiteLocalAddress());
-		System.out.println("");
+		log.debug("addr.getHostAddress() = " + addr.getHostAddress());
+        log.debug("addr.getHostName() = " + addr.getHostName());
+        log.debug("addr.isAnyLocalAddress() = " + addr.isAnyLocalAddress());
+        log.debug("addr.isLinkLocalAddress() = " + addr.isLinkLocalAddress());
+        log.debug("addr.isLoopbackAddress() = " + addr.isLoopbackAddress());
+        log.debug("addr.isMulticastAddress() = " + addr.isMulticastAddress());
+        log.debug("addr.isSiteLocalAddress() = " + addr.isSiteLocalAddress());
+        log.debug("");
 	}
 
     private void removeUserTokenCookie(HttpServletRequest request, HttpServletResponse response) {
