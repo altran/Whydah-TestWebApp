@@ -22,8 +22,9 @@ public class ApplicationMode {
             appMode = System.getProperty(IAM_MODE_KEY);
         }
         if(appMode == null) {
-            System.err.println(IAM_MODE_KEY + " not defined in environment. System will exit(4).");
-            System.exit(4);
+            appMode = TEST;
+//            System.err.println(IAM_MODE_KEY + " not defined in environment. System will exit(4).");
+//            System.exit(4);
         }
         if(!Arrays.asList(TEST, TEST_L).contains(appMode)) {
             System.err.println("Unknown " + IAM_MODE_KEY + ": " + appMode + ". System will exit(5).");

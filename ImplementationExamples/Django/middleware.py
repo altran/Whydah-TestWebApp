@@ -129,7 +129,7 @@ def getAppToken(appID, appPass):
 
 def getUserToken(appToken, idvalue, idtype):
 	if appToken:
-		appTokenID = appToken[ appToken.find('<applicationtoken>')+len('<applicationtoken>') : appToken.find('</applicationtoken>') ]
+		appTokenID = appToken[ appToken.find('<applicationtokenID>')+len('<applicationtokenID>') : appToken.find('</applicationtokenID>') ]
 		#appid = ET.XML(responsedata).find('applicationtoken')
 		path = SSO_URL+'tokenservice/iam/%s/getusertokenby%s' % (appTokenID, idtype) # URL to be changed to 'getusertokenbyticket'
 		values = { 'apptoken' : appToken, 'ticket' : idvalue, 'tokenid': idvalue } # ticketid-parameter to be changed to 'ticket'

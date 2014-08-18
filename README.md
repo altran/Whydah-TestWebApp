@@ -17,3 +17,14 @@ Installation
 
 * create a user for the service
 * run start_service.sh
+
+
+
+
+Developer info
+==============
+
+* https://wiki.cantara.no/display/iam/Architecture+Overview
+* https://wiki.cantara.no/display/iam/Key+Whydah+Data+Structures
+* https://wiki.cantara.no/display/iam/Modules
+

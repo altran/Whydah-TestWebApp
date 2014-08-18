@@ -25,8 +25,8 @@ public class WhydahLogonToken {
 	}
 
 
-	public String getApplicationtoken() {
-		return params == null ? null : params.applicationtoken;
+	public String getApplicationtokenID() {
+		return params == null ? null : params.applicationtokenID;
 	}
 
 	public String getApplicationid() {
@@ -46,15 +46,15 @@ public class WhydahLogonToken {
 	}
 
 	private static class WhydahTokenParams {
-		private String applicationtoken, applicationid, applicationname;
+		private String applicationtokenID, applicationid, applicationname;
 		private Date expires;
 
-		public String getApplicationtoken() {
-			return applicationtoken;
+		public String getApplicationtokenID() {
+			return applicationtokenID;
 		}
 
-		public void setApplicationtoken(String applicationtoken) {
-			this.applicationtoken = applicationtoken;
+		public void setApplicationtokenID(String applicationtokenID) {
+			this.applicationtokenID = applicationtokenID;
 		}
 
 		public String getApplicationid() {
