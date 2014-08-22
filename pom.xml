@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.whydah.sso.web</groupId>
     <artifactId>Whydah-TestWebApp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0Alpha</version>
     <name>Whydah-TestWebApp</name>
     <url>https://wiki.cantara.no/display/iam/TestWebApp</url>
 
@@ -37,7 +36,8 @@
         <developerConnection>scm:git:ssh://git@github.com/altran/Whydah-TestWebApp.git</developerConnection>
         <connection>scm:git:https://github.com/altran/Whydah-TestWebApp.git</connection>
         <url>https://github.com/altran/Whydah-TestWebApp</url>
-    </scm>
+      <tag>Whydah-TestWebApp-2.0Alpha</tag>
+  </scm>
 
     <repositories>
         <repository>
@@ -204,10 +204,8 @@
                                 </excludes>
                             </artifactSet>
                             <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.handlers</resource>
                                 </transformer>
