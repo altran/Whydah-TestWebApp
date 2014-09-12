@@ -75,34 +75,32 @@ public class LoginController {
         //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
         if (userticket != null && userticket.length() > 3) {
             log.debug("Looking for userticket (URL param):" + userticket);
-            String userToken = ssoHelper.getUserToken(applicationTokenXml, userticket);
+            String userToken = ssoHelper.getUserTokenByTicket(applicationTokenXml, userticket);
             if (userToken.length() > 10) {
                 model.addAttribute("token", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
                 model.addAttribute("realname", getRealName(userToken));
                 return "hello";
             } else {
-                removeUserTokenCookie(request, response);
                 return REDIRECT_TO_LOGIN_SERVICE;
             }
-        }
+        } else  if (hasRightCookie(request)) {
+                model.addAttribute("greeting", "Hello world!\n");
+                String userTokenTicketFromCookie = getUserTokenIdFromCookie(request);
+                String userToken = ssoHelper.getUserTokenByTicket(ssoHelper.logonApplication(), userTokenTicketFromCookie);
+                log.debug("Looking for userTokenID (Cookie):" + userToken);
 
-        if (hasRightCookie(request)) {
-            model.addAttribute("greeting", "Hello world!\n");
-            String userTokenIdFromCookie = getUserTokenIdFromCookie(request);
-            String userToken = ssoHelper.getUserToken(ssoHelper.logonApplication(), userTokenIdFromCookie);
-			log.debug("Looking for userTokenID (Cookie):" + userToken);
-            
-			if (ssoHelper.getUserToken(ssoHelper.logonApplication(), userTokenIdFromCookie).length() > 10) {
-                model.addAttribute("token", userToken);
-                model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname",getRealName(userToken));
-                return "hello";
-            } else {
-                removeUserTokenCookie(request, response);
-                return REDIRECT_TO_LOGIN_SERVICE;
+                if (userToken.length() > 10) {
+                    model.addAttribute("token", userToken);
+                    model.addAttribute("logouturl", LOGOUT_SERVICE);
+                    model.addAttribute("realname", getRealName(userToken));
+                    return "hello";
+                } else {
+                    removeUserTokenCookie(request, response);
+                    return REDIRECT_TO_LOGIN_SERVICE;
+                }
             }
-        }
+
         return REDIRECT_TO_LOGIN_SERVICE;
     }
 

@@ -63,7 +63,7 @@ public class SSOHelper {
             int responseCode = httpClient.executeMethod(postMethod);
             String responseAsString = postMethod.getResponseBodyAsString();
 
-            log.debug("ResponseCode={} when executing {}, ApplicationToken: \n {}", responseCode, path, responseAsString);
+            log.debug("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString,applicationCredential.toXML());
             /*
             if (responseCode == 201) {
                 log.debug("Post" + postMethod.getRequestHeader("Location").getValue());
@@ -89,7 +89,7 @@ public class SSOHelper {
         return null;
     }
 
-    public String getUserToken(String appTokenXML, String userticket) {
+    public String getUserTokenByTicket(String appTokenXML, String userticket) {
         if (userticket == null){
             throw new IllegalArgumentException("userticket cannot be null!");
         }
