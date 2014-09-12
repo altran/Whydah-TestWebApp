@@ -1,18 +1,14 @@
 package org.whydah.sso.web.util;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.whydah.sso.config.AppConfig;
 import org.whydah.sso.web.data.ApplicationCredential;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
@@ -110,6 +106,33 @@ public class SSOHelper {
             return userTokenXml;
         } catch (IOException ioe) {
             log.error("getusertokenbyticket failed", ioe);
+        } finally {
+            postMethod.releaseConnection();
+        }
+        return null;
+    }
+
+    public String getUserTokenByTokenID(String appTokenXML, String usertokenID) {
+        if (usertokenID == null) {
+            throw new IllegalArgumentException("usertokenID cannot be null!");
+        }
+
+        String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
+
+        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbytokenid"; // webResource.path("/iam/")
+        PostMethod postMethod = new PostMethod(path);
+        postMethod.addParameter("apptoken", appTokenXML);
+        postMethod.addParameter("usertokenid", usertokenID);
+        log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, usertokenID);
+
+
+        try {
+            int responseCode = httpClient.executeMethod(postMethod);
+            String userTokenXml = postMethod.getResponseBodyAsString();
+            log.trace("Executed getusertokenbytokenid, responseCode={}, userToken=\n{}", responseCode, userTokenXml);
+            return userTokenXml;
+        } catch (IOException ioe) {
+            log.error("getusertokenbytokenid failed", ioe);
         } finally {
             postMethod.releaseConnection();
         }

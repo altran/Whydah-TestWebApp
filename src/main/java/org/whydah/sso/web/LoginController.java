@@ -1,9 +1,14 @@
 package org.whydah.sso.web;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.w3c.dom.Document;
+import org.whydah.sso.config.AppConfig;
+import org.whydah.sso.web.util.SSOHelper;
+import org.xml.sax.InputSource;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,16 +19,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.w3c.dom.Document;
-import org.whydah.sso.config.AppConfig;
-import org.whydah.sso.web.util.SSOHelper;
-import org.xml.sax.InputSource;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Controller
 public class LoginController {
@@ -86,8 +85,8 @@ public class LoginController {
             }
         } else  if (hasRightCookie(request)) {
                 model.addAttribute("greeting", "Hello world!\n");
-                String userTokenTicketFromCookie = getUserTokenIdFromCookie(request);
-                String userToken = ssoHelper.getUserTokenByTicket(ssoHelper.logonApplication(), userTokenTicketFromCookie);
+            String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
+            String userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
                 if (userToken.length() > 10) {
