@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.whydah.sso.config.AppConfig;
 import org.whydah.sso.web.data.ApplicationCredential;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -18,11 +19,13 @@ import java.net.URI;
 
 public class SSOHelper {
     private static final Logger log = LoggerFactory.getLogger(SSOHelper.class);
-    //private static final URI BASE_URI = UriBuilder.fromUri("https://sso.altran.se/tokenservice/").port(443).build(); //TODO: DO NOT HARDCODE
     final URI BASE_URI;
 
     private WebResource webResource;
     private final HttpClient httpClient;
+    private  String applicationid;
+    private  String applicationsecret;
+    private  String tokenServiceUri;
 
     public SSOHelper(String tokenServiceUri){
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
@@ -42,9 +45,15 @@ public class SSOHelper {
 
 
     public String logonApplication() {
+        try {
+            applicationid = AppConfig.readProperties().getProperty("applicationid");
+            applicationsecret= AppConfig.readProperties().getProperty("applicationsecret");
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e.getLocalizedMessage(), e);
+        }
         ApplicationCredential applicationCredential = new ApplicationCredential();
-        applicationCredential.setApplicationID("SSOTestWebApp");
-        applicationCredential.setApplicationPassord("dummy");
+        applicationCredential.setApplicationID(applicationid);
+        applicationCredential.setApplicationPassord(applicationsecret);
 
         String path = webResource.path("/logon").toString();
         PostMethod postMethod = new PostMethod(path);
@@ -80,9 +89,9 @@ public class SSOHelper {
         return null;
     }
 
-    public String getUserToken(String appTokenXML, String usertokenId) {
-        if (usertokenId == null){
-            throw new IllegalArgumentException("usertokenid cannot be null!");
+    public String getUserToken(String appTokenXML, String userticket) {
+        if (userticket == null){
+            throw new IllegalArgumentException("userticket cannot be null!");
         }
 
         String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
@@ -90,8 +99,8 @@ public class SSOHelper {
         String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
-        postMethod.addParameter("ticket", usertokenId);
-        log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, usertokenId);
+        postMethod.addParameter("ticket", userticket);
+        log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, userticket);
 
 
         try {

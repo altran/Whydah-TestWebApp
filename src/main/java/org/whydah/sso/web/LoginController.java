@@ -28,7 +28,7 @@ import org.xml.sax.InputSource;
 @Controller
 public class LoginController {
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
-    static final String USER_TOKEN_REFERENCE_NAME = "whydahusertoken";
+    static final String USER_TOKEN_REFERENCE_NAME = "test_whydahusertoken";
 
     static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
     static String REDIRECT_TO_LOGOUT_SERVICE; // = "redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/logout" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
@@ -74,7 +74,7 @@ public class LoginController {
 
         //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
         if (userticket != null && userticket.length() > 3) {
-            log.debug("Looking for userTokenID (URL param):" + userticket);
+            log.debug("Looking for userticket (URL param):" + userticket);
             String userToken = ssoHelper.getUserToken(applicationTokenXml, userticket);
             if (userToken.length() > 10) {
                 model.addAttribute("token", userToken);
