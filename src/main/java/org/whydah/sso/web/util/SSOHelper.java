@@ -92,10 +92,10 @@ public class SSOHelper {
 
         String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
 
-        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyticket"; // webResource.path("/iam/")
+        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyuserticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
-        postMethod.addParameter("ticket", userticket);
+        postMethod.addParameter("userticket", userticket);
         log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, userticket);
 
 
@@ -119,7 +119,7 @@ public class SSOHelper {
 
         String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
 
-        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbytokenid"; // webResource.path("/iam/")
+        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyusertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
         postMethod.addParameter("usertokenid", usertokenID);
