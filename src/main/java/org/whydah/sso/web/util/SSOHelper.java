@@ -21,7 +21,6 @@ public class SSOHelper {
     private final HttpClient httpClient;
     private  String applicationid;
     private  String applicationsecret;
-    private  String tokenServiceUri;
 
     public SSOHelper(String tokenServiceUri){
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
@@ -29,15 +28,6 @@ public class SSOHelper {
         webResource = c.resource(BASE_URI);
         httpClient = new HttpClient();
     }
-
-    /*
-    public String getUserToken(String appTokenXML, String usertokenId) {
-        if (usertokenId == null){
-            throw new IllegalArgumentException("usertokenid cannot be null!");
-        }
-        return getUserToken(usertokenId, appTokenXML);
-    }
-    */
 
 
     public String logonApplication() {
@@ -92,7 +82,7 @@ public class SSOHelper {
 
         String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
 
-        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyuserticket"; // webResource.path("/iam/")
+        String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
         postMethod.addParameter("userticket", userticket);
@@ -119,7 +109,7 @@ public class SSOHelper {
 
         String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
 
-        String path = webResource.path("/token/").toString() + applicationTokenId + "/getusertokenbyusertokenid"; // webResource.path("/iam/")
+        String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
         postMethod.addParameter("usertokenid", usertokenID);

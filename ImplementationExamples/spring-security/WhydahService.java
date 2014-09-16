@@ -38,11 +38,11 @@ public class WhydahService {
 	}
 
 	protected WhydahUserToken getUserToken(WhydahLogonToken applicationToken, String ticket) {
-		WebResource restResource = restClient.resource(String.format("%s/iam/%s/getusertokenbyticket", tokeservice, applicationToken.getApplicationtoken()));
+		WebResource restResource = restClient.resource(String.format("%s/user/%s/get_usertoken_by_userticket", tokeservice, applicationToken.getApplicationtoken()));
 		WebResource.Builder builder = restResource.accept(MediaType.APPLICATION_XML).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 		MultivaluedMap formData = new MultivaluedMapImpl();
 		formData.add("apptoken", new XStream().toXML(applicationToken));
-		formData.add("ticket", ticket);
+		formData.add("userticket", ticket);
 		return builder.post(WhydahUserToken.class, formData);
 //		String data = builder.post(String.class, formData);
 //		return null;
