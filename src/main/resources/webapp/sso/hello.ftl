@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-Hi ${realname}
+Hi ${realname} ${greetings!}
 <br/>
 <br/>
 You have been logged on to Whydah.<br/>
@@ -14,6 +14,6 @@ You have been logged on to Whydah.<br/>
 We have registered the following privileges on your user:
 <br/>
 <br/>
-<TEXTAREA NAME="usercredential" COLS=150 ROWS=50>${token}</TEXTAREA>
+<TEXTAREA NAME="usertoken" COLS=150 ROWS=50>${usertoken}</TEXTAREA>
 </body>
 </html>

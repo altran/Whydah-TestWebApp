@@ -48,15 +48,14 @@ var auth = ( function () {
         var appTokenXml = logonApplication();
         var myAppTokenId = getTokenIdFromAppToken(appTokenXml);
 
-        var url = tokenServiceUrl + "iam/" + myAppTokenId + "/getusertokenby"+type+"id";
+        var url = tokenServiceUrl + "user/" + myAppTokenId + "/get_usertoken_by_"+type+"id";
 
         var req = new XMLHttpRequest();
         req.open("POST", url, false);
         req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
         req.send(
             'apptoken=' + escape(appTokenXml) + 
-            '&usertokenid=' + id + 
-            '&ticketid=' + id
+            '&userticket=' + id
             );
 
         return req.responseText;

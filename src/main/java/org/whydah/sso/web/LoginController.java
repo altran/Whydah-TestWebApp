@@ -73,10 +73,11 @@ public class LoginController {
 
         //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
         if (userticket != null && userticket.length() > 3) {
+            model.addAttribute("greeting", "Resolving user from userticket!\n");
             log.debug("Looking for userticket (URL param):" + userticket);
             String userToken = ssoHelper.getUserTokenByTicket(applicationTokenXml, userticket);
             if (userToken.length() > 10) {
-                model.addAttribute("token", userToken);
+                model.addAttribute("usertoken", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
                 model.addAttribute("realname", getRealName(userToken));
                 return "hello";
@@ -84,13 +85,13 @@ public class LoginController {
                 return REDIRECT_TO_LOGIN_SERVICE;
             }
         } else  if (hasRightCookie(request)) {
-                model.addAttribute("greeting", "Hello world!\n");
+            model.addAttribute("greeting", "Resolving user from Cookie!\n");
             String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
             String userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
                 if (userToken.length() > 10) {
-                    model.addAttribute("token", userToken);
+                    model.addAttribute("usertoken", userToken);
                     model.addAttribute("logouturl", LOGOUT_SERVICE);
                     model.addAttribute("realname", getRealName(userToken));
                     return "hello";

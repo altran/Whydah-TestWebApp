@@ -12,7 +12,7 @@ var user = context.get_web().get_currentUser();
 	
 	function search(q){
 		$.ajax({
-		  url: 'https://cv.altran.no/solr/collection1/select',
+		  url: 'https://cv.altran.no/solr/test/select',
 		  data: {'wt':'json', 'q':q},
 		  success: function(data) { 
 			  renderResults(data);
