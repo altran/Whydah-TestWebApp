@@ -14,10 +14,10 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 public class WhydahService {
 
-	@Value("${whydah.ssoBaseUrl:http://sso.nkk.no/sso}")
+	@Value("${whydah.ssoBaseUrl:http://sso.test.no/sso}")
 	private String ssoUrl;
 
-	@Value("${whydah.ssoBaseUrl:http://sso.nkk.no/tokenservice}")
+	@Value("${whydah.ssoBaseUrl:http://sso.test.no/tokenservice}")
 	private String tokeservice;
 
 	@Value("${whydah.applicationId:JudgeDirectory}")
