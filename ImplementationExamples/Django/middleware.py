@@ -34,19 +34,8 @@ class WhydahMiddleware(object):
 					else:
 						appToken = getAppToken(APP_NAME, APP_SECRET)
 						log.info('Getting usertoken:')
-						userToken = getUserToken(appToken, ticket, 'ticket')
+						userToken = getUserToken(appToken, ticket, 'userticket')
 						log.info(userToken)
-				'''
-				elif tokenid:
-					log.info('You are not logged in - Attempting log in')
-					log.info('Tokenid:')
-					log.info(tokenid)
-					appToken = getAppToken(APP_NAME, APP_SECRET)
-					log.info('Getting usertoken:')
-					userToken = getUserToken(appToken, tokenid, 'tokenid')
-					log.info(userToken)
-				'''
-
 				if userToken:
 					logged_in = loginUserWithToken(userToken, request)
 					log.info('logged in: ')
