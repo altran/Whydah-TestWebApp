@@ -18,6 +18,7 @@ public class ServerRunner {
         serverRunner.join();
     }
 
+    // TODO  user parameters from propertyfile
     public ServerRunner() {
         server = new Server(PORT_NO);
         ServletContextHandler context = new ServletContextHandler(server, "/test");

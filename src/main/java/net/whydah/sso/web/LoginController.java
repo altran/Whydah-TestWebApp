@@ -225,11 +225,11 @@ public class LoginController {
             Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            String  expression = "/token/fornavn[1]";
+            String expression = "/usertoken/firstname[1]";
             XPathExpression xPathExpression =
                     xPath.compile(expression);
             String fornavn = (xPathExpression.evaluate(doc));
-            expression = "/token/etternavn[1]";
+            expression = "/usertoken/lastname[1]";
             xPathExpression =
                     xPath.compile(expression);
             String etternavn = (xPathExpression.evaluate(doc));
@@ -247,7 +247,7 @@ public class LoginController {
             Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            String expression = "/token/timestamp[1]";
+            String expression = "/usertoken/timestamp[1]";
             XPathExpression xPathExpression =
                     xPath.compile(expression);
             return (xPathExpression.evaluate(doc));
