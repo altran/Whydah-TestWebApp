@@ -1,13 +1,13 @@
-package org.whydah.sso.web;
+package net.whydah.sso.web;
 
+import net.whydah.sso.config.AppConfig;
+import net.whydah.sso.web.util.SSOHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
-import org.whydah.sso.config.AppConfig;
-import org.whydah.sso.web.util.SSOHelper;
 import org.xml.sax.InputSource;
 
 import javax.servlet.http.Cookie;

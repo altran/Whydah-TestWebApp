@@ -1,4 +1,4 @@
-package org.whydah.sso.web;
+package net.whydah.sso.web;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -7,7 +7,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class ServerRunner {
     public static final int PORT_NO = 9990;
-    public static final String TESTURL = "http://localhost:"+ PORT_NO + "/test/action";
+    public static final String TESTURL = "http://localhost:" + PORT_NO + "/test/action";
 
     private Server server;
 
@@ -18,7 +18,7 @@ public class ServerRunner {
         serverRunner.join();
     }
 
-    public ServerRunner()  {
+    public ServerRunner() {
         server = new Server(PORT_NO);
         ServletContextHandler context = new ServletContextHandler(server, "/test");
 

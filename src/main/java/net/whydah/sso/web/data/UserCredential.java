@@ -1,4 +1,4 @@
-package org.whydah.sso.web.data;
+package net.whydah.sso.web.data;
 
 public class UserCredential {
 
@@ -21,17 +21,17 @@ public class UserCredential {
         this.password = password;
     }
 
-    public String toXML(){
-        if (userName== null){
+    public String toXML() {
+        if (userName == null) {
             return templateToken;
         } else {
             return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
-            "<usercredential>\n" +
-            "    <params>\n" +
-            "        <username>"+getUserName()+"</username>\n" +
-            "        <password>"+getPassword()+"</password>\n" +
-            "    </params> \n" +
-            "</usercredential>\n" ;
+                    "<usercredential>\n" +
+                    "    <params>\n" +
+                    "        <username>" + getUserName() + "</username>\n" +
+                    "        <password>" + getPassword() + "</password>\n" +
+                    "    </params> \n" +
+                    "</usercredential>\n";
         }
     }
 
@@ -39,8 +39,8 @@ public class UserCredential {
 
             "    <usercredential>\n" +
             "        <params>\n" +
-            "            <username>"+getUserName()+"</username>\n" +
-            "            <password>"+getPassword()+"</password>\n" +
+            "            <username>" + getUserName() + "</username>\n" +
+            "            <password>" + getPassword() + "</password>\n" +
             "        </params> \n" +
             "    </usercredential>\n" +
             "";

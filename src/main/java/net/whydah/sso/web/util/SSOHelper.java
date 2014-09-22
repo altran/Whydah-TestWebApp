@@ -1,13 +1,13 @@
-package org.whydah.sso.web.util;
+package net.whydah.sso.web.util;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import net.whydah.sso.config.AppConfig;
+import net.whydah.sso.web.data.ApplicationCredential;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.whydah.sso.config.AppConfig;
-import org.whydah.sso.web.data.ApplicationCredential;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -19,10 +19,10 @@ public class SSOHelper {
 
     private WebResource webResource;
     private final HttpClient httpClient;
-    private  String applicationid;
-    private  String applicationsecret;
+    private String applicationid;
+    private String applicationsecret;
 
-    public SSOHelper(String tokenServiceUri){
+    public SSOHelper(String tokenServiceUri) {
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
         Client c = Client.create();
         webResource = c.resource(BASE_URI);
@@ -33,7 +33,7 @@ public class SSOHelper {
     public String logonApplication() {
         try {
             applicationid = AppConfig.readProperties().getProperty("applicationid");
-            applicationsecret= AppConfig.readProperties().getProperty("applicationsecret");
+            applicationsecret = AppConfig.readProperties().getProperty("applicationsecret");
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getLocalizedMessage(), e);
         }
@@ -49,7 +49,7 @@ public class SSOHelper {
             int responseCode = httpClient.executeMethod(postMethod);
             String responseAsString = postMethod.getResponseBodyAsString();
 
-            log.debug("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString,applicationCredential.toXML());
+            log.debug("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString, applicationCredential.toXML());
             /*
             if (responseCode == 201) {
                 log.debug("Post" + postMethod.getRequestHeader("Location").getValue());
@@ -76,7 +76,7 @@ public class SSOHelper {
     }
 
     public String getUserTokenByTicket(String appTokenXML, String userticket) {
-        if (userticket == null){
+        if (userticket == null) {
             throw new IllegalArgumentException("userticket cannot be null!");
         }
 

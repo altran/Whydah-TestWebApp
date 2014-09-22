@@ -1,4 +1,4 @@
-package org.whydah.sso.config;
+package net.whydah.sso.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class AppConfig {
         Properties properties = loadFromClasspath(appMode);
 
         String configfilename = System.getProperty(IAM_CONFIG_KEY);
-        if(configfilename != null) {
+        if (configfilename != null) {
             loadFromFile(properties, configfilename);
         }
         return properties;
@@ -32,7 +32,7 @@ public class AppConfig {
         String propertyfile = String.format("testwebapp.%s.properties", appMode);
         logger.info("Loading properties from classpath: {}", propertyfile);
         InputStream is = AppConfig.class.getClassLoader().getResourceAsStream(propertyfile);
-        if(is == null) {
+        if (is == null) {
             logger.error("Error reading {} from classpath.", propertyfile);
             System.exit(3);
         }
@@ -43,7 +43,7 @@ public class AppConfig {
     private static void loadFromFile(Properties properties, String configfilename) throws IOException {
         File file = new File(configfilename);
         logger.info("Overriding defaults from property file {}", file.getAbsolutePath());
-        if(file.exists()) {
+        if (file.exists()) {
             properties.load(new FileInputStream(file));
         } else {
             logger.error("Config file {} specified by System property {} not found.", configfilename, IAM_CONFIG_KEY);

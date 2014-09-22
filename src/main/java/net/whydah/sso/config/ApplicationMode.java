@@ -1,4 +1,4 @@
-package org.whydah.sso.config;
+package net.whydah.sso.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +18,15 @@ public class ApplicationMode {
     public static String getApplicationMode() {
         // Enten PROD, TEST, DEV
         String appMode = System.getenv(IAM_MODE_KEY);
-        if(appMode == null) {
+        if (appMode == null) {
             appMode = System.getProperty(IAM_MODE_KEY);
         }
-        if(appMode == null) {
+        if (appMode == null) {
             appMode = TEST;
 //            System.err.println(IAM_MODE_KEY + " not defined in environment. System will exit(4).");
 //            System.exit(4);
         }
-        if(!Arrays.asList(TEST, TEST_L).contains(appMode)) {
+        if (!Arrays.asList(TEST, TEST_L).contains(appMode)) {
             System.err.println("Unknown " + IAM_MODE_KEY + ": " + appMode + ". System will exit(5).");
             System.exit(5);
         }

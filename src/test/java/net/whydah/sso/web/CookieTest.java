@@ -1,11 +1,11 @@
-package org.whydah.sso.web;
+package net.whydah.sso.web;
 
 
+import net.whydah.sso.config.ApplicationMode;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.whydah.sso.config.ApplicationMode;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,7 +17,7 @@ import java.util.*;
 import static org.junit.Assert.assertTrue;
 
 public class CookieTest {
-    private Map<String, Map<String, Map<String,String>>> store;
+    private Map<String, Map<String, Map<String, String>>> store;
 
     private static final String SET_COOKIE = "Set-Cookie";
     private static final String COOKIE_VALUE_DELIMITER = ";";
@@ -129,7 +129,7 @@ public class CookieTest {
         Iterator cookieNames = domainStore.keySet().iterator();
         while (cookieNames.hasNext()) {
             String cookieName = (String) cookieNames.next();
-            System.out.println("===> Cookie: "+cookieName);
+            System.out.println("===> Cookie: " + cookieName);
             Map<String, String> cookie = domainStore.get(cookieName);
             // check cookie to ensure path matches  and cookie is not expired
             // if all is cool, add cookie to header string
@@ -203,10 +203,10 @@ public class CookieTest {
             // check cookie to ensure path matches  and cookie is not expired
             // if all is cool, add cookie to header string
             //if (comparePaths(cookie.get(PATH), path) && isNotExpired(cookie.get(EXPIRES))) {
-                cookieStringBuffer.append(cookieName);
-                cookieStringBuffer.append("=");
-                cookieStringBuffer.append(cookie.get(cookieName));
-                if (cookieNames.hasNext()) cookieStringBuffer.append(SET_COOKIE_SEPARATOR);
+            cookieStringBuffer.append(cookieName);
+            cookieStringBuffer.append("=");
+            cookieStringBuffer.append(cookie.get(cookieName));
+            if (cookieNames.hasNext()) cookieStringBuffer.append(SET_COOKIE_SEPARATOR);
             //}
         }
         System.out.println("Cookies: " + cookieStringBuffer);
