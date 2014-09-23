@@ -86,16 +86,16 @@ public class SSOHelper {
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
         postMethod.addParameter("userticket", userticket);
-        log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, userticket);
+        log.trace("Executing get_usertoken_by_userticket, path={}, appToken={}, userticket={}", path, appTokenXML, userticket);
 
 
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String userTokenXml = postMethod.getResponseBodyAsString();
-            log.trace("Executed getusertokenbyticket, responseCode={}, userToken=\n{}", responseCode, userTokenXml);
+            log.trace("Executed get_usertoken_by_userticket, responseCode={}, userToken=\n{}", responseCode, userTokenXml);
             return userTokenXml;
         } catch (IOException ioe) {
-            log.error("getusertokenbyticket failed", ioe);
+            log.error("get_usertoken_by_userticket failed", ioe);
         } finally {
             postMethod.releaseConnection();
         }
@@ -113,16 +113,16 @@ public class SSOHelper {
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter("apptoken", appTokenXML);
         postMethod.addParameter("usertokenid", usertokenID);
-        log.trace("Executing getusertokenbyticket, path={}, appToken={}, ticket={}", path, appTokenXML, usertokenID);
+        log.trace("Executing get_usertoken_by_usertokenid, path={}, appToken={}, usertokenid={}", path, appTokenXML, usertokenID);
 
 
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String userTokenXml = postMethod.getResponseBodyAsString();
-            log.trace("Executed getusertokenbytokenid, responseCode={}, userToken=\n{}", responseCode, userTokenXml);
+            log.trace("Executed get_usertoken_by_usertokenid, responseCode={}, userToken=\n{}", responseCode, userTokenXml);
             return userTokenXml;
         } catch (IOException ioe) {
-            log.error("getusertokenbytokenid failed", ioe);
+            log.error("get_usertoken_by_usertokenid failed", ioe);
         } finally {
             postMethod.releaseConnection();
         }
