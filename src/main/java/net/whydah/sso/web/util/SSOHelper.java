@@ -60,6 +60,9 @@ public class SSOHelper {
             if (responseCode == 406) {
                 log.debug("Not accepted");
             }
+            if (responseCode == 410) {
+                log.debug("Gone");  // check cookie
+            }
             if (responseCode == 500 || responseCode == 501) {
                 log.debug("Internal error");
                 // retry
