@@ -202,14 +202,14 @@ public class LoginController {
             return null;
     }
 
-    private String getTokenId(String userTokenXml) {
+    private String getUserTokenIdFromUserTokenXML(String userTokenXml) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            String expression = "/token/@id";
+            String expression = "/usertoken/@id";
             XPathExpression xPathExpression =
                     xPath.compile(expression);
             return (xPathExpression.evaluate(doc));
