@@ -19,9 +19,9 @@
     <mvc:resources mapping="/css/**" location="/, classpath:/css/" />
 
 
-	<context:component-scan base-package="org.whydah.sso.web" />
+    <context:component-scan base-package="net.whydah.sso.web"/>
 
-	<mvc:annotation-driven />
+    <mvc:annotation-driven />
 
 	<bean id="freemarkerConfig"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
