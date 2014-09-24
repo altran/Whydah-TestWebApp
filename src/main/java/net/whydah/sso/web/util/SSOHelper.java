@@ -83,7 +83,7 @@ public class SSOHelper {
             throw new IllegalArgumentException("userticket cannot be null!");
         }
 
-        String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
+        String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
 
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
@@ -110,7 +110,7 @@ public class SSOHelper {
             throw new IllegalArgumentException("usertokenID cannot be null!");
         }
 
-        String applicationTokenId = appTokenXML.substring(appTokenXML.indexOf("<applicationtokenID>") + "<applicationtokenID>".length(), appTokenXML.indexOf("</applicationtokenID>"));
+        String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
 
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);

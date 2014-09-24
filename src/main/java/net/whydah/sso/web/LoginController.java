@@ -2,25 +2,18 @@ package net.whydah.sso.web;
 
 import net.whydah.sso.config.AppConfig;
 import net.whydah.sso.web.util.SSOHelper;
+import net.whydah.sso.web.util.XpathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -79,7 +72,7 @@ public class LoginController {
             if (userToken.length() > 10) {
                 model.addAttribute("usertoken", userToken);
                 model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname", getRealName(userToken));
+                model.addAttribute("realname", XpathHelper.getRealName(userToken));
                 return "hello";
             } else {
                 return REDIRECT_TO_LOGIN_SERVICE;
@@ -93,7 +86,7 @@ public class LoginController {
                 if (userToken.length() > 10) {
                     model.addAttribute("usertoken", userToken);
                     model.addAttribute("logouturl", LOGOUT_SERVICE);
-                    model.addAttribute("realname", getRealName(userToken));
+                    model.addAttribute("realname", XpathHelper.getRealName(userToken));
                     return "hello";
                 } else {
                     removeUserTokenCookie(request, response);
@@ -200,61 +193,6 @@ public class LoginController {
             return cookie.getValue();
         else
             return null;
-    }
-
-    private String getUserTokenIdFromUserTokenXML(String userTokenXml) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
-            String expression = "/usertoken/@id";
-            XPathExpression xPathExpression =
-                    xPath.compile(expression);
-            return (xPathExpression.evaluate(doc));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    private String getRealName(String userTokenXml) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
-            String expression = "/usertoken/firstname[1]";
-            XPathExpression xPathExpression =
-                    xPath.compile(expression);
-            String fornavn = (xPathExpression.evaluate(doc));
-            expression = "/usertoken/lastname[1]";
-            xPathExpression =
-                    xPath.compile(expression);
-            String etternavn = (xPathExpression.evaluate(doc));
-            return fornavn+" "+etternavn;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    private String getTokenMaxAge(String userTokenXml) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(userTokenXml)));
-            XPath xPath = XPathFactory.newInstance().newXPath();
-
-            String expression = "/usertoken/timestamp[1]";
-            XPathExpression xPathExpression =
-                    xPath.compile(expression);
-            return (xPathExpression.evaluate(doc));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
 
