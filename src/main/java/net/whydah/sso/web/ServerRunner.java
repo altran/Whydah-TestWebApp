@@ -1,24 +1,31 @@
 package net.whydah.sso.web;
 
+import net.whydah.sso.config.AppConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.DispatcherServlet;
 
-public class ServerRunner {
-    public static final int PORT_NO = 9990;
-    public static final String TESTURL = "http://localhost:" + PORT_NO + "/test/action";
+import java.net.MalformedURLException;
+import java.net.URL;
 
+public class ServerRunner {
+    private static final Logger log = LoggerFactory.getLogger(ServerRunner.class);
+    public static int PORT_NO = 9990;
+    public static String TESTURL = "http://localhost:" + "9990" + "/test/action";
     private Server server;
 
 
     public static void main(String[] arguments) throws Exception {
+        TESTURL = AppConfig.readProperties().getProperty("myuri");
+        PORT_NO = getPortNo(TESTURL);
         ServerRunner serverRunner = new ServerRunner();
         serverRunner.start();
         serverRunner.join();
     }
 
-    // TODO  user parameters from propertyfile
     public ServerRunner() {
         server = new Server(PORT_NO);
         ServletContextHandler context = new ServletContextHandler(server, "/test");
@@ -39,5 +46,14 @@ public class ServerRunner {
 
     public void join() throws InterruptedException {
         server.join();
+    }
+
+    private static int getPortNo(String URI) {
+        try {
+            return new URL(URI).getPort();
+        } catch (MalformedURLException ue) {
+            log.warn("Error in property configuration of property myuri={}. Reverting to default PORTNO=9990  ", URI);
+            return 9990;
+        }
     }
 }
