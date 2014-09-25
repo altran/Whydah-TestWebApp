@@ -1,6 +1,7 @@
 package net.whydah.sso.web;
 
 import net.whydah.sso.config.AppConfig;
+import net.whydah.sso.web.util.ModelHelper;
 import net.whydah.sso.web.util.SSOHelper;
 import net.whydah.sso.web.util.XpathHelper;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import java.net.UnknownHostException;
 
 @Controller
 public class LoginController {
-	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     static final String USER_TOKEN_REFERENCE_NAME = "test_whydahusertoken";
 
     static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
@@ -66,27 +67,27 @@ public class LoginController {
 
         //String userTokenID = request.getParameter(USER_TOKEN_REFERENCE_NAME);
         if (userticket != null && userticket.length() > 3) {
-            model.addAttribute("greeting", "Resolving user from userticket!\n");
+            model.addAttribute(ModelHelper.GREETING, "Resolving user from userticket!\n");
             log.debug("Looking for userticket (URL param):" + userticket);
             String userToken = ssoHelper.getUserTokenByTicket(applicationTokenXml, userticket);
 
             if (userToken.length() > 10) {
-                model.addAttribute("usertoken", userToken);
-                model.addAttribute("logouturl",  LOGOUT_SERVICE);
-                model.addAttribute("realname", XpathHelper.getRealName(userToken));
+                model.addAttribute(ModelHelper.USERTOKEN, userToken);
+                model.addAttribute(ModelHelper.LOGOUTURL, LOGOUT_SERVICE);
+                model.addAttribute(ModelHelper.REALNAME, XpathHelper.getRealName(userToken));
                 return "hello";
 
                 // handle re-load of page with userticket on URI
             } else if (hasRightCookie(request)) {
-                model.addAttribute("greeting", "Resolving user from Cookie!\n");
+                model.addAttribute(ModelHelper.GREETING, "Resolving user from Cookie!\n");
                 String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
                 userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
                 if (userToken.length() > 10) {
-                    model.addAttribute("usertoken", userToken);
-                    model.addAttribute("logouturl", LOGOUT_SERVICE);
-                    model.addAttribute("realname", XpathHelper.getRealName(userToken));
+                    model.addAttribute(ModelHelper.USERTOKEN, userToken);
+                    model.addAttribute(ModelHelper.LOGOUTURL, LOGOUT_SERVICE);
+                    model.addAttribute(ModelHelper.REALNAME, XpathHelper.getRealName(userToken));
                     return "hello";
                 } else {
                     removeUserTokenCookie(request, response);
@@ -97,15 +98,15 @@ public class LoginController {
             return REDIRECT_TO_LOGIN_SERVICE;
 
         } else  if (hasRightCookie(request)) {
-            model.addAttribute("greeting", "Resolving user from Cookie!\n");
+            model.addAttribute(ModelHelper.GREETING, "Resolving user from Cookie!\n");
             String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
             String userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
                 if (userToken.length() > 10) {
-                    model.addAttribute("usertoken", userToken);
-                    model.addAttribute("logouturl", LOGOUT_SERVICE);
-                    model.addAttribute("realname", XpathHelper.getRealName(userToken));
+                    model.addAttribute(ModelHelper.USERTOKEN, userToken);
+                    model.addAttribute(ModelHelper.LOGOUTURL, LOGOUT_SERVICE);
+                    model.addAttribute(ModelHelper.REALNAME, XpathHelper.getRealName(userToken));
                     return "hello";
                 } else {
                     removeUserTokenCookie(request, response);
@@ -137,7 +138,7 @@ public class LoginController {
 
     @RequestMapping("/action")
     public String action(HttpServletRequest request, HttpServletResponse response, Model model) {
-        model.addAttribute("greeting", "Hello world!\n");
+        model.addAttribute(ModelHelper.GREETING, "Hello world!\n");
         return "action";
     }
 
