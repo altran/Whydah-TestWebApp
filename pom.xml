@@ -22,7 +22,7 @@
     <properties>
         <jersey-version>1.18.1</jersey-version>
         <spring-version>4.1.0.RELEASE</spring-version>
-        <jetty-version>7.3.0.v20110203</jetty-version>
+        <jetty-version>9.3.0.M0</jetty-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
