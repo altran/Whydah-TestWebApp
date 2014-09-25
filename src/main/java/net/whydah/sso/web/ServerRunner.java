@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ServerRunner {
@@ -50,7 +49,7 @@ public class ServerRunner {
     private static int getPortNo(String URI) {
         try {
             return new URL(URI).getPort();
-        } catch (MalformedURLException ue) {
+        } catch (Exception ue) {
             log.warn("Error in property configuration of property myuri={}. Reverting to default PORTNO=9990  ", URI);
             return 9990;
         }
