@@ -16,58 +16,38 @@ import java.net.URI;
 public class SSOHelper {
     private static final Logger log = LoggerFactory.getLogger(SSOHelper.class);
     final URI BASE_URI;
-
     private WebResource webResource;
     private final HttpClient httpClient;
     private String applicationid;
     private String applicationsecret;
+    private ApplicationCredential applicationCredential;
 
     public SSOHelper(String tokenServiceUri) {
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
         Client c = Client.create();
         webResource = c.resource(BASE_URI);
         httpClient = new HttpClient();
-    }
-
-
-    public String logonApplication() {
         try {
             applicationid = AppConfig.readProperties().getProperty("applicationid");
             applicationsecret = AppConfig.readProperties().getProperty("applicationsecret");
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getLocalizedMessage(), e);
         }
-        ApplicationCredential applicationCredential = new ApplicationCredential();
+        applicationCredential = new ApplicationCredential();
         applicationCredential.setApplicationID(applicationid);
         applicationCredential.setApplicationPassord(applicationsecret);
+    }
 
+
+    public String logonApplication() {
         String path = webResource.path("/logon").toString();
         PostMethod postMethod = new PostMethod(path);
-        postMethod.addParameter("applicationcredential", applicationCredential.toXML());
+        postMethod.addParameter(RequestHelper.APPLICATIONCREDENTIAL, applicationCredential.toXML());
 
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String responseAsString = postMethod.getResponseBodyAsString();
-
-            log.debug("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString, applicationCredential.toXML());
-            /*
-            if (responseCode == 201) {
-                log.debug("Post" + postMethod.getRequestHeader("Location").getValue());
-            }
-            if (responseCode == 400) {
-                log.debug("Internal error");
-            }
-            if (responseCode == 406) {
-                log.debug("Not accepted");
-            }
-            if (responseCode == 410) {
-                log.debug("Gone");  // check cookie
-            }
-            if (responseCode == 500 || responseCode == 501) {
-                log.debug("Internal error");
-                // retry
-            }
-            */
+            log.trace("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString, applicationCredential.toXML());
             return responseAsString;
         } catch (IOException ioe) {
             log.error("logonApplication failed", ioe);
@@ -82,16 +62,12 @@ public class SSOHelper {
         if (userticket == null) {
             throw new IllegalArgumentException("userticket cannot be null!");
         }
-
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
-
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
-        postMethod.addParameter("apptoken", appTokenXML);
-        postMethod.addParameter("userticket", userticket);
+        postMethod.addParameter(RequestHelper.APPTOKEN, appTokenXML);
+        postMethod.addParameter(RequestHelper.USERTICKET, userticket);
         log.trace("Executing get_usertoken_by_userticket, path={}, appToken={}, userticket={}", path, appTokenXML, userticket);
-
-
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String userTokenXml = postMethod.getResponseBodyAsString();
@@ -105,20 +81,17 @@ public class SSOHelper {
         return null;
     }
 
+
     public String getUserTokenByTokenID(String appTokenXML, String usertokenID) {
         if (usertokenID == null) {
             throw new IllegalArgumentException("usertokenID cannot be null!");
         }
-
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
-
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
-        postMethod.addParameter("apptoken", appTokenXML);
-        postMethod.addParameter("usertokenid", usertokenID);
+        postMethod.addParameter(RequestHelper.APPTOKEN, appTokenXML);
+        postMethod.addParameter(RequestHelper.USERTOKENID, usertokenID);
         log.trace("Executing get_usertoken_by_usertokenid, path={}, appToken={}, usertokenid={}", path, appTokenXML, usertokenID);
-
-
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String userTokenXml = postMethod.getResponseBodyAsString();
@@ -132,36 +105,6 @@ public class SSOHelper {
         return null;
     }
 
-    /*
-    public void logonApplication() {
-        PostMethod p = setUpApplicationLogon();
-        HttpClient c = new HttpClient();
-        try {
-            int v = c.executeMethod(p);
-            if (v == 201) {
-                log.debug("Post" + p.getRequestHeader("Location").getValue());
-            }
-            if (v == 400) {
-                log.debug("Internal error");
-            }
-            if (v == 500 || v == 501) {
-                log.debug("Internal error");
-// retry
-            }
-            //System.out.println(p.getResponseBodyAsStream());
-        } catch (IOException ioe) {
-            log.error("", ioe);
-        } finally {
-            p.releaseConnection();
-        }
-    }
-    private PostMethod setUpApplicationLogon() {
-        //TODO baardl Implement application credential
-        String requestXML = "";
-        PostMethod p = new PostMethod(webResource.path("/logon").toString());
-        p.addParameter("applicationcredential",requestXML);
-        return p;
-    }
-    */
+
 }
 

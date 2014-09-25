@@ -2,6 +2,7 @@ package net.whydah.sso.web;
 
 import net.whydah.sso.config.AppConfig;
 import net.whydah.sso.web.util.ModelHelper;
+import net.whydah.sso.web.util.RequestHelper;
 import net.whydah.sso.web.util.SSOHelper;
 import net.whydah.sso.web.util.XpathHelper;
 import org.slf4j.Logger;
@@ -15,22 +16,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 @Controller
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
-    static final String USER_TOKEN_REFERENCE_NAME = "test_whydahusertoken";
-
     static String REDIRECT_TO_LOGIN_SERVICE; //"redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/login" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
     static String REDIRECT_TO_LOGOUT_SERVICE; // = "redirect:http://"+getHost()+":" + SSO_PORT + "/ssoHelper/logout" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/hello";
     static String LOGOUT_SERVICE; // = "http://"+getHost()+":" + SSO_PORT + "/ssoHelper/logoutaction" + "?redirectURI=http://"+getHost()+":" + MY_PORT + "/test/logout";
-
     private String myUri;
     private String ssoLoginWebappUri;
     private String tokenServiceUri;
-
     private final SSOHelper ssoHelper;
 
 
@@ -78,9 +73,9 @@ public class LoginController {
                 return "hello";
 
                 // handle re-load of page with userticket on URI
-            } else if (hasRightCookie(request)) {
+            } else if (RequestHelper.hasRightCookie(request)) {
                 model.addAttribute(ModelHelper.GREETING, "Resolving user from Cookie!\n");
-                String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
+                String userTokenIDFromCookie = RequestHelper.getUserTokenIdFromCookie(request);
                 userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
@@ -90,16 +85,16 @@ public class LoginController {
                     model.addAttribute(ModelHelper.REALNAME, XpathHelper.getRealName(userToken));
                     return "hello";
                 } else {
-                    removeUserTokenCookie(request, response);
+                    RequestHelper.removeUserTokenCookie(request, response);
                     return REDIRECT_TO_LOGIN_SERVICE;
                 }
             }
 
             return REDIRECT_TO_LOGIN_SERVICE;
 
-        } else  if (hasRightCookie(request)) {
+        } else if (RequestHelper.hasRightCookie(request)) {
             model.addAttribute(ModelHelper.GREETING, "Resolving user from Cookie!\n");
-            String userTokenIDFromCookie = getUserTokenIdFromCookie(request);
+            String userTokenIDFromCookie = RequestHelper.getUserTokenIdFromCookie(request);
             String userToken = ssoHelper.getUserTokenByTokenID(ssoHelper.logonApplication(), userTokenIDFromCookie);
                 log.debug("Looking for userTokenID (Cookie):" + userToken);
 
@@ -109,7 +104,7 @@ public class LoginController {
                     model.addAttribute(ModelHelper.REALNAME, XpathHelper.getRealName(userToken));
                     return "hello";
                 } else {
-                    removeUserTokenCookie(request, response);
+                    RequestHelper.removeUserTokenCookie(request, response);
                     return REDIRECT_TO_LOGIN_SERVICE;
                 }
             }
@@ -124,16 +119,16 @@ public class LoginController {
 
     @RequestMapping("/locallogout")
     public String logout(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String userTokenId = getUserTokenIdFromCookie(request);
+        String userTokenId = RequestHelper.getUserTokenIdFromCookie(request);
 
-        Cookie cookie = new Cookie(USER_TOKEN_REFERENCE_NAME, "localhost");
-        cookie.setValue(USER_TOKEN_REFERENCE_NAME);
+        Cookie cookie = new Cookie(RequestHelper.USER_TOKEN_REFERENCE_NAME, "localhost");
+        cookie.setValue(RequestHelper.USER_TOKEN_REFERENCE_NAME);
         //cookie.setMaxAge(new Long(Long.parseLong(getTokenMaxAge(10000 + ssoHelper.getUserToken())) - System.currentTimeMillis()).intValue()); // set
         cookie.setMaxAge(100000);
         //cookie.setDomain("localhost");
         cookie.setValue("");
         response.addCookie(cookie);
-        return REDIRECT_TO_LOGOUT_SERVICE + '&' + USER_TOKEN_REFERENCE_NAME + '=' + userTokenId;
+        return REDIRECT_TO_LOGOUT_SERVICE + '&' + RequestHelper.USER_TOKEN_REFERENCE_NAME + '=' + userTokenId;
     }
 
     @RequestMapping("/action")
@@ -143,77 +138,6 @@ public class LoginController {
     }
 
 
-    public static String getHost() {
-        String host = "localhost";
-        try {
-            String hostName = InetAddress.getLocalHost().getHostName();
-
-            InetAddress addrs[] = InetAddress.getAllByName(hostName);
-
-            String myIp = null;
-            for (InetAddress addr : addrs) {
-                printDebugInfo(addr);
-
-                if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()) {
-                    myIp = addr.getHostAddress();
-                }
-            }
-            // System.out.println("\nIP = " + myIp);
-            if(myIp != null)
-                host = myIp;
-        } catch (UnknownHostException e) {
-        }
-        return host;
-    }
-
-	private static void printDebugInfo(InetAddress addr) {
-		log.debug("addr.getHostAddress() = " + addr.getHostAddress());
-        log.debug("addr.getHostName() = " + addr.getHostName());
-        log.debug("addr.isAnyLocalAddress() = " + addr.isAnyLocalAddress());
-        log.debug("addr.isLinkLocalAddress() = " + addr.isLinkLocalAddress());
-        log.debug("addr.isLoopbackAddress() = " + addr.isLoopbackAddress());
-        log.debug("addr.isMulticastAddress() = " + addr.isMulticastAddress());
-        log.debug("addr.isSiteLocalAddress() = " + addr.isSiteLocalAddress());
-        log.debug("");
-	}
-
-    private void removeUserTokenCookie(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = getUserTokenCookie(request);
-        if(cookie != null) {
-            cookie.setValue(USER_TOKEN_REFERENCE_NAME);
-            cookie.setMaxAge(0);
-            cookie.setValue("");
-            response.addCookie(cookie);
-        }
-    }
-
-    private Cookie getUserTokenCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        System.out.println("=============> header: " + cookies);
-        if (cookies == null) {
-            return null;
-        }
-
-        for (Cookie cooky : cookies) {
-            System.out.println("Cookie: " + cooky.getName());
-            if (cooky.getName().equalsIgnoreCase(USER_TOKEN_REFERENCE_NAME)) {
-                return cooky;
-            }
-        }
-        return null;
-    }
-
-    private boolean hasRightCookie(HttpServletRequest request) {
-        return getUserTokenCookie(request) != null;
-    }
-
-    private String getUserTokenIdFromCookie(HttpServletRequest request) {
-        Cookie cookie = getUserTokenCookie(request);
-        if(cookie != null)
-            return cookie.getValue();
-        else
-            return null;
-    }
 
 
 }
