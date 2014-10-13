@@ -14,10 +14,10 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 public class WhydahService {
 
-	@Value("${whydah.ssoBaseUrl:http://sso.test.no/sso}")
+	@Value("${whydah.ssoBaseUrl:http://sso.nkk.no/sso}")
 	private String ssoUrl;
 
-	@Value("${whydah.ssoBaseUrl:http://sso.test.no/tokenservice}")
+	@Value("${whydah.ssoBaseUrl:http://sso.nkk.no/tokenservice}")
 	private String tokeservice;
 
 	@Value("${whydah.applicationId:JudgeDirectory}")
@@ -38,11 +38,11 @@ public class WhydahService {
 	}
 
 	protected WhydahUserToken getUserToken(WhydahLogonToken applicationToken, String ticket) {
-		WebResource restResource = restClient.resource(String.format("%s/user/%s/get_usertoken_by_userticket", tokeservice, applicationToken.getApplicationtoken()));
+		WebResource restResource = restClient.resource(String.format("%s/iam/%s/getusertokenbyticket", tokeservice, applicationToken.getApplicationtoken()));
 		WebResource.Builder builder = restResource.accept(MediaType.APPLICATION_XML).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 		MultivaluedMap formData = new MultivaluedMapImpl();
 		formData.add("apptoken", new XStream().toXML(applicationToken));
-		formData.add("userticket", ticket);
+		formData.add("ticket", ticket);
 		return builder.post(WhydahUserToken.class, formData);
 //		String data = builder.post(String.class, formData);
 //		return null;

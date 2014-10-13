@@ -1,4 +1,4 @@
-package no.nkk.judgedirectory.web.security;
+package net.whydah.identity.spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by gunnar on 2/14/14.
+ * Loosely based upon code from Gunnar Skjold (Origin AS)
+ * @author Gunnar Skjold
+ * @author <a href="bard.lind@gmail.com">Bard Lind</a>
  */
 public class WhydahEntryPoint implements AuthenticationEntryPoint {
 
@@ -44,7 +46,7 @@ public class WhydahEntryPoint implements AuthenticationEntryPoint {
 
 			WhydahUserToken userToken = whydahService.getUserToken(applicationToken, ticket);
 			String username = userToken.getEmail(); // TODO
-			UserDetailsImpl user = new UserDetailsImpl(applicationToken, userToken);
+			User user = new UserDetailsImpl(applicationToken, userToken);
 
 			WhydahAuthentication authentication = new WhydahAuthentication(username, user, new WebAuthenticationDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));

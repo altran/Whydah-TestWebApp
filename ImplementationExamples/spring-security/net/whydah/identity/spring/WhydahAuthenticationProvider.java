@@ -1,11 +1,13 @@
-package no.nkk.judgedirectory.web.security;
+package net.whydah.identity.spring;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * Created by gunnar on 2/14/14.
+ * Loosely based upon code from Gunnar Skjold (Origin AS)
+ * @author Gunnar Skjold
+ * @author <a href="bard.lind@gmail.com">Bard Lind</a>
  */
 public class WhydahAuthenticationProvider implements AuthenticationProvider {
 

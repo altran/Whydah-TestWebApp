@@ -13,3 +13,6 @@ target/
 /.settings
 /.project
 /.classpath
+
+#Local config*
+config-override/
