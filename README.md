@@ -14,6 +14,41 @@ The ImplementationExamples includes example code for Whydah integration for:
 
 ![Architectural Overview](https://raw2.github.com/altran/Whydah-SSOLoginWebApp/master/Whydah%20infrastructure.png)
 
+Client code example
+===================
+```
+//  Execute a POST to authenticate my application
+String myApplicationToken = Request.Post("https://sso.whydah.net/sso/logon")
+        .bodyForm(Form.form().add("applicationcredential", "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+                                               <applicationcredential>
+                                                  <params>
+                                                      <applicationID>234</applicationID>
+                                                      <applicationSecret>This is my application secret</applicationSecret>
+                                                  </params>
+                                               </applicationcredential>").build())
+        .execute().returnContent().asBytes();
+
+//  Find applicationtokenID from applicationToken
+String myApplicationTokenID = $(myApplicationToken).xpath("/applicationtoken/params/applicationtokenID[1]");
+
+//  Redirect user til SSO login web with my URL as redirect
+//  Get userticket from redirect back URL param
+//@RequestMapping("/myapp")
+//public String myWebApplication(@QueryParam("userticket") String userticket, HttpServletRequest request)
+
+//  Execute a POST  to SecurityTokenService with userticket to get usertoken
+String usertoken = Request.Post("https://sso.whydah.net/sso/user/"+myApplicationTokenID+"/get_usertoken_by_userticket/")
+        .bodyForm(Form.form().add("apptoken", myApplicationToken).add("userticket", userTicket).build())
+        .execute().returnContent().asBytes();
+
+// Get some token values
+String userTokenID = $(usertoken).xpath("/usertoken/@id");
+NodeList applicationRoleList = $(usertoken).xpath("/usertoken/application");
+boolean hasEmployeeRoleInMyApp = $(usertoken).xpath("/usertoken/application[@ID=\"234\"]/role[@name=\"Employee\"");
+```
+(Example using Apache HTTP Components Fluent API and jOOX Fluent API)
+
+
 Installation
 ============
 
