@@ -17,7 +17,7 @@ import java.net.URI;
 public class SSOHelper {
     private static final Logger log = LoggerFactory.getLogger(SSOHelper.class);
     final URI BASE_URI;
-    private WebResource webResource;
+    private WebResource tokenServiceResource;
     private final HttpClient httpClient;
     private String applicationid;
     private String applicationsecret;
@@ -26,7 +26,7 @@ public class SSOHelper {
     public SSOHelper(String tokenServiceUri) {
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
         Client c = Client.create();
-        webResource = c.resource(BASE_URI);
+        tokenServiceResource = c.resource(BASE_URI);
         httpClient = new HttpClient();
         try {
             applicationid = AppConfig.readProperties().getProperty("applicationid");
@@ -41,7 +41,7 @@ public class SSOHelper {
 
 
     public String logonApplication() {
-        String path = webResource.path("/logon").toString();
+        String path = tokenServiceResource.path("/logon").toString();
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter(RequestHelper.APPLICATIONCREDENTIAL, applicationCredential.toXML());
 
@@ -68,7 +68,7 @@ public class SSOHelper {
             throw new IllegalArgumentException("userticket cannot be null or empty!");
         }
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
-        String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
+        String path = tokenServiceResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter(RequestHelper.APPTOKEN, appTokenXML);
         postMethod.addParameter(RequestHelper.USERTICKET, userticket);
@@ -96,7 +96,7 @@ public class SSOHelper {
         }
 
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
-        String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
+        String path = tokenServiceResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);
         postMethod.addParameter(RequestHelper.APPTOKEN, appTokenXML);
         postMethod.addParameter(RequestHelper.USERTOKENID, usertokenID);
