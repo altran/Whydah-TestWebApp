@@ -18,7 +18,7 @@ public class ServerRunner {
 
 
     public static void main(String[] arguments) throws Exception {
-        PORT_NO = getPortNo(AppConfig.readProperties().getProperty("port"));
+        PORT_NO = getPortNo(AppConfig.readProperties().getProperty("myuri"));
         ServerRunner serverRunner = new ServerRunner();
         serverRunner.start();
         serverRunner.join();

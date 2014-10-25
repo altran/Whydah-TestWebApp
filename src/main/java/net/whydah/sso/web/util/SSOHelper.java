@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 
 public class SSOHelper {
@@ -49,9 +50,10 @@ public class SSOHelper {
             String responseAsString = postMethod.getResponseBodyAsString();
             log.trace("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString, applicationCredential.toXML());
             return responseAsString;
+        } catch (ConnectException ce) {
+            log.error("logonApplication failed. ConnectException: {}", ce.getMessage());
         } catch (IOException ioe) {
             log.error("logonApplication failed", ioe);
-            ioe.printStackTrace();
         } finally {
             postMethod.releaseConnection();
         }
@@ -59,8 +61,11 @@ public class SSOHelper {
     }
 
     public String getUserTokenByTicket(String appTokenXML, String userticket) {
-        if (userticket == null) {
-            throw new IllegalArgumentException("userticket cannot be null!");
+        if (appTokenXML == null || appTokenXML.isEmpty()) {
+            throw new IllegalArgumentException("appTokenXML cannot be null or empty!");
+        }
+        if (userticket == null || userticket.isEmpty()) {
+            throw new IllegalArgumentException("userticket cannot be null or empty!");
         }
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_userticket"; // webResource.path("/iam/")
@@ -83,9 +88,13 @@ public class SSOHelper {
 
 
     public String getUserTokenByTokenID(String appTokenXML, String usertokenID) {
-        if (usertokenID == null) {
-            throw new IllegalArgumentException("usertokenID cannot be null!");
+        if (appTokenXML == null || appTokenXML.isEmpty()) {
+            throw new IllegalArgumentException("appTokenXML cannot be null or empty!");
         }
+        if (usertokenID == null || usertokenID.isEmpty()) {
+            throw new IllegalArgumentException("usertokenID cannot be null or empty!");
+        }
+
         String applicationTokenId = XpathHelper.getAppTokenIdFromAppToken(appTokenXML);
         String path = webResource.path("user/").toString() + applicationTokenId + "/get_usertoken_by_usertokenid"; // webResource.path("/iam/")
         PostMethod postMethod = new PostMethod(path);

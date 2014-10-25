@@ -19,6 +19,9 @@
         </layout>
     </appender>
 
+    <logger name="org.eclipse.jetty" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.apache.commons.httpclient" level="WARN" />
 
     <logger name="net.whydah" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>

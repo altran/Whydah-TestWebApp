@@ -30,7 +30,7 @@ public class AppConfig {
     private static Properties loadFromClasspath(String appMode) throws IOException {
         Properties properties = new Properties();
         String propertyfile = String.format("testwebapp.%s.properties", appMode);
-        logger.info("Loading properties from classpath: {}", propertyfile);
+        //logger.info("Loading properties from classpath: {}", propertyfile);
         InputStream is = AppConfig.class.getClassLoader().getResourceAsStream(propertyfile);
         if (is == null) {
             logger.error("Error reading {} from classpath.", propertyfile);
@@ -42,7 +42,7 @@ public class AppConfig {
 
     private static void loadFromFile(Properties properties, String configfilename) throws IOException {
         File file = new File(configfilename);
-        logger.info("Overriding defaults from property file {}", file.getAbsolutePath());
+        //logger.info("Overriding defaults from property file {}", file.getAbsolutePath());
         if (file.exists()) {
             properties.load(new FileInputStream(file));
         } else {

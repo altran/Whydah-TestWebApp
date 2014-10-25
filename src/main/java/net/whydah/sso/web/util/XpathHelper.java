@@ -104,7 +104,7 @@ public class XpathHelper {
 
 
     public static String getAppTokenIdFromAppToken(String appTokenXML) {
-        logger.trace("appTokenXML: {}", appTokenXML);
+        logger.debug("appTokenXML: {}", appTokenXML);
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

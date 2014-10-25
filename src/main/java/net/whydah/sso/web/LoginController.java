@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
+import java.util.Properties;
 
 @Controller
 public class LoginController {
@@ -31,9 +32,10 @@ public class LoginController {
 
     public LoginController() {
     	try {
-            myUri = AppConfig.readProperties().getProperty("myuri");
-            ssoLoginWebappUri = AppConfig.readProperties().getProperty("logonserviceurl");
-            tokenServiceUri = AppConfig.readProperties().getProperty("tokenservice");
+            Properties config = AppConfig.readProperties();
+            myUri = config.getProperty("myuri");
+            ssoLoginWebappUri = config.getProperty("logonserviceurl");
+            tokenServiceUri = config.getProperty("tokenservice");
 
             if (myUri == null || ssoLoginWebappUri == null || tokenServiceUri == null) {
                 log.error("Urls not set correctly. Exiting. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
@@ -52,7 +54,7 @@ public class LoginController {
 		}
 
         log.info("LoginController initialized ok. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
-        log.info("Try the service at {}", myUri + "/hello");
+        log.info("Try the service at {}", myUri + "hello");
         ssoHelper = new SSOHelper(tokenServiceUri);
     }
 

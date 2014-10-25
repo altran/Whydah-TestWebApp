@@ -162,7 +162,7 @@ public class CookieTest {
         try {
             return (now.compareTo(dateFormat.parse(cookieExpires))) <= 0;
         } catch (java.text.ParseException pe) {
-            pe.printStackTrace();
+            //pe.printStackTrace();
             return false;
         }
     }
@@ -221,7 +221,7 @@ public class CookieTest {
             storeCookies(conn);
             setCookies(url.openConnection());
         } catch (Exception ioe) {
-            ioe.printStackTrace();
+            //ioe.printStackTrace();
             assertTrue("Unable to connect to server", true);
         }
         testCookieStore();
@@ -244,7 +244,7 @@ public class CookieTest {
             storeCookies(conn);
             setCookies(url.openConnection());
         } catch (Exception ioe) {
-            ioe.printStackTrace();
+            //ioe.printStackTrace();
             assertTrue("Unable to connect to server", true);
         }
         testCookieStore();
