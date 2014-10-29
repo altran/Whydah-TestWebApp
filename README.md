@@ -106,7 +106,7 @@ applicationsecret=33879936R6Jr47D4Hj5R6p9qT
 
 standalone=false
 myuri=http://localhost:9990/test/
-logonserviceurl=http://localhost:9997/sso/
+logonservice=http://localhost:9997/sso/
 tokenservice=http://localhost:9998/tokenservice/
 ```
 

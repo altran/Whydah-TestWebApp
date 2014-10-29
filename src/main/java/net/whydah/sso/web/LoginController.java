@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
-import java.util.Properties;
 
 @Controller
 public class LoginController {
@@ -54,7 +53,7 @@ public class LoginController {
 		}
 
         log.info("LoginController initialized ok. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
-        log.info("Try the service at {}", myUri + "hello");
+        log.info("Try the service at {}", myUri + "/hello");
         ssoHelper = new SSOHelper(tokenServiceUri);
     }
 

@@ -2,8 +2,19 @@ package net.whydah.sso.web.data;
 
 public class ApplicationCredential {
 
+    private String applicationName = "myapplicationname";
     private String applicationID = "apphkjhkjhkjh";
     private String applicationPassord = "nmnmnm,n,";
+
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
 
     public String getApplicationID() {
         return applicationID;
@@ -21,6 +32,7 @@ public class ApplicationCredential {
         this.applicationPassord = applicationPassord;
     }
 
+
     public String toXML() {
         if (applicationID == null) {
             return templateToken;
@@ -28,6 +40,7 @@ public class ApplicationCredential {
             return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> \n " +
                     "<applicationcredential>\n" +
                     "    <params>\n" +
+                    "        <applicationName>" + getApplicationName() + "</applicationName>\n" +
                     "        <applicationID>" + getApplicationID() + "</applicationID>\n" +
                     "        <applicationSecret>" + getApplicationPassord() + "</applicationSecret>\n" +
                     "    </params> \n" +
@@ -39,6 +52,7 @@ public class ApplicationCredential {
             "<template>\n" +
             "    <applicationcredential>\n" +
             "        <params>\n" +
+            "        <applicationName>" + getApplicationName() + "</applicationName>\n" +
             "            <applicationID>" + getApplicationID() + "</applicationID>\n" +
             "            <applicationSecret>" + getApplicationPassord() + "</applicationSecret>\n" +
             "        </params> \n" +

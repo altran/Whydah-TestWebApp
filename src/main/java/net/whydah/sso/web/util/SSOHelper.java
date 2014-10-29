@@ -20,6 +20,7 @@ public class SSOHelper {
     private WebResource tokenServiceResource;
     private final HttpClient httpClient;
     private String applicationid;
+    private String applicationname;
     private String applicationsecret;
     private ApplicationCredential applicationCredential;
 
@@ -29,6 +30,7 @@ public class SSOHelper {
         tokenServiceResource = c.resource(BASE_URI);
         httpClient = new HttpClient();
         try {
+            applicationname = AppConfig.readProperties().getProperty("applicationname");
             applicationid = AppConfig.readProperties().getProperty("applicationid");
             applicationsecret = AppConfig.readProperties().getProperty("applicationsecret");
         } catch (IOException e) {
@@ -37,6 +39,7 @@ public class SSOHelper {
         applicationCredential = new ApplicationCredential();
         applicationCredential.setApplicationID(applicationid);
         applicationCredential.setApplicationPassord(applicationsecret);
+        applicationCredential.setApplicationName(applicationname);
     }
 
 
