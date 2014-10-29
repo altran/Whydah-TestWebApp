@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
+import java.util.Properties;
 
 @Controller
 public class LoginController {
@@ -33,7 +34,7 @@ public class LoginController {
     	try {
             Properties config = AppConfig.readProperties();
             myUri = config.getProperty("myuri");
-            ssoLoginWebappUri = config.getProperty("logonserviceurl");
+            ssoLoginWebappUri = config.getProperty("logonservice");
             tokenServiceUri = config.getProperty("tokenservice");
 
             if (myUri == null || ssoLoginWebappUri == null || tokenServiceUri == null) {
