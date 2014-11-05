@@ -9,6 +9,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLHandshakeException;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -44,19 +45,22 @@ public class SSOHelper {
 
 
     public String logonApplication() {
-        String path = tokenServiceResource.path("/logon").toString();
-        PostMethod postMethod = new PostMethod(path);
+        WebResource logonResource = tokenServiceResource.path("/logon");
+        PostMethod postMethod = new PostMethod(logonResource.toString());
         postMethod.addParameter(RequestHelper.APPLICATIONCREDENTIAL, applicationCredential.toXML());
 
+        String targetUrl = logonResource.getURI().toString();
         try {
             int responseCode = httpClient.executeMethod(postMethod);
             String responseAsString = postMethod.getResponseBodyAsString();
-            log.trace("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, path, responseAsString, applicationCredential.toXML());
+            log.trace("ResponseCode={} when executing {}, ApplicationToken: \n {}  ApplicationCredential: {}", responseCode, targetUrl, responseAsString, applicationCredential.toXML());
             return responseAsString;
         } catch (ConnectException ce) {
-            log.error("logonApplication failed. ConnectException: {}", ce.getMessage());
+            log.error("logonApplication failed. targetUrl={}, ConnectException: {}", targetUrl, ce.getMessage());
+        } catch (SSLHandshakeException sslE) {
+            log.error("logonApplication failed. targetUrl={}, SSLHandshakeException: {}", targetUrl, sslE.getMessage());
         } catch (IOException ioe) {
-            log.error("logonApplication failed", ioe);
+            log.error("logonApplication failed. targetUrl={}", targetUrl, ioe);
         } finally {
             postMethod.releaseConnection();
         }

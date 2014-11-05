@@ -19,13 +19,6 @@
         </developer>
     </developers>
 
-    <properties>
-        <jersey-version>1.18.1</jersey-version>
-        <spring-version>4.1.0.RELEASE</spring-version>
-        <jetty-version>9.3.0.M0</jetty-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <parent>
         <groupId>no.cantara.emi</groupId>
         <artifactId>parent</artifactId>
@@ -36,8 +29,14 @@
         <developerConnection>scm:git:ssh://git@github.com/altran/Whydah-TestWebApp.git</developerConnection>
         <connection>scm:git:https://github.com/altran/Whydah-TestWebApp.git</connection>
         <url>https://github.com/altran/Whydah-TestWebApp</url>
-        <tag>HEAD</tag>
     </scm>
+
+
+    <properties>
+        <jersey-version>1.18.1</jersey-version>
+        <spring-version>4.1.0.RELEASE</spring-version>
+        <jetty-version>9.3.0.M0</jetty-version>
+    </properties>
 
     <repositories>
         <!-- Needed for parent  -->

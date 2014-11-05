@@ -42,7 +42,7 @@ public class LoginController {
                 System.exit(1);
             }
 
-	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoLoginWebappUri + "login?redirectURI=" + myUri + "hello";;
+	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoLoginWebappUri + "login?redirectURI=" + myUri + "hello";
 	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoLoginWebappUri + "logout?redirectURI=" + myUri + "hello";
 	    	LOGOUT_SERVICE = ssoLoginWebappUri + "logoutaction?redirectURI=" + myUri + "logout";
 	    	log.debug("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
@@ -54,7 +54,7 @@ public class LoginController {
 		}
 
         log.info("LoginController initialized ok. myUri={}, ssoLoginWebappUri={}, tokenServiceUri={}", myUri, ssoLoginWebappUri, tokenServiceUri);
-        log.info("Try the service at {}", myUri + "/hello");
+        log.info("Try the service at {}", myUri + "hello");
         ssoHelper = new SSOHelper(tokenServiceUri);
     }
 
@@ -138,8 +138,4 @@ public class LoginController {
         model.addAttribute(ModelHelper.GREETING, "Hello world!\n");
         return "action";
     }
-
-
-
-
 }
