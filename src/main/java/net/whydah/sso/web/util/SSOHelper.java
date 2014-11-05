@@ -26,6 +26,8 @@ public class SSOHelper {
     private ApplicationCredential applicationCredential;
 
     public SSOHelper(String tokenServiceUri) {
+
+        SSLTool.disableCertificateValidation();
         BASE_URI = UriBuilder.fromUri(tokenServiceUri).build();
         Client c = Client.create();
         tokenServiceResource = c.resource(BASE_URI);
