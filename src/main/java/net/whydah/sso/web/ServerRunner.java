@@ -49,10 +49,13 @@ public class ServerRunner {
 
     private static int getPortNo(String URI) {
         try {
-            return new URL(URI).getPort();
+            int portNr = new URL(URI).getPort();
+            if(portNr >= 0) {
+                return portNr; //Avoiding "-1" if port is not a part of URL
+            }
         } catch (Exception ue) {
             log.warn("Error in property configuration of property myuri={}. Reverting to default PORTNO=9990  ", URI);
-            return 9990;
         }
+        return 9990;
     }
 }
