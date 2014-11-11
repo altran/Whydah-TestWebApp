@@ -44,8 +44,8 @@ public class LoginController {
 
 	    	REDIRECT_TO_LOGIN_SERVICE = "redirect:" + ssoLoginWebappUri + "login?redirectURI=" + myUri + "hello";
 	    	REDIRECT_TO_LOGOUT_SERVICE = "redirect:" + ssoLoginWebappUri + "logout?redirectURI=" + myUri + "hello";
-	    	LOGOUT_SERVICE = ssoLoginWebappUri + "logoutaction?redirectURI=" + myUri + "logout";
-	    	log.debug("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
+            LOGOUT_SERVICE = ssoLoginWebappUri + "logoutaction?redirectURI=" + myUri + "hello";
+            log.debug("REDIRECT_TO_LOGIN_SERVICE: {}", REDIRECT_TO_LOGIN_SERVICE);
             log.debug("REDIRECT_TO_LOGOUT_SERVICE: {}", REDIRECT_TO_LOGOUT_SERVICE);
             log.debug("LOGOUT_SERVICE: {}", LOGOUT_SERVICE);
     	} catch (IOException e) {
