@@ -9,33 +9,33 @@ import urllib2
 import logging
 log = logging.getLogger('Middleware')
 
-ACCESSROLES = ['']
+ACCESSROLES = [
+	'ReadOnly',
+	'Employee',
+	'Manager',
+	'Administrator',
+]
 
 class WhydahMiddleware(object):
 	def process_request(self, request):
 		if request.user.is_authenticated():
 			return None
 		else:
+			log.info('You are not logged in - Attempting log in')
 			if request.method == 'GET':
-				ticket = request.GET.get('userticket', False)
-				# tokenid = request.COOKIES.get('whydahusertoken_sso', False)
+				userTicket = request.GET.get('userticket', False)
 				userToken = False
 
-				if ticket:
-					log.info('You are not logged in - Attempting log in')
-					log.info('Ticket:')
-					log.info(ticket)
-					if ticket == 'test' and DEBUG:
-						log.info('Initiating test-token')
-						userToken = TESTTOKEN
-					elif ticket == 'test2' and DEBUG:
-						log.info('Initiating test-token2')
-						userToken = TESTTOKEN2
-					else:
-						appToken = getAppToken(APP_NAME, APP_SECRET)
-						log.info('Getting usertoken:')
-						userToken = getUserToken(appToken, ticket, 'userticket')
-						log.info(userToken)
+				if userTicket:
+					log.info('Userticket:')
+					log.info(userTicket)
+					appToken = getAppToken(APP_NAME, APP_SECRET)
+					log.info('Getting usertoken:')
+					userToken = getUserToken(appToken, userTicket, 'userticket')
+					log.info(userToken)
+					if not userToken:
+						return authNotAvailable(request)
+	
 				if userToken:
 					logged_in = loginUserWithToken(userToken, request)
 					log.info('logged in: ')
@@ -43,31 +43,51 @@ class WhydahMiddleware(object):
 					if logged_in:
 						return None
 					else:
-						log.info('cant log in with your token :( ')
-						response = redirect('cv.views.myRemoteLogout')
-						response['Location'] += '?path=https://' + request.get_host()
-						return response
+						log.info("Can't log in with your token")
+						return unauthorizedResponse(request)
 		return None
 
 	def process_view(self, request, view_func, view_args, view_kwargs):
 		viewFunctionName = view_func.__name__
-		if not request.user.is_authenticated() and not viewFunctionName in ['myRemoteLogin','myRemoteLogout']:
+		log.info(viewFunctionName)
+		if not request.user.is_authenticated() and not viewFunctionName in ['myRemoteLogin','myRemoteLogout','error401', 'error503']:
 			log.info('User not authenticated, redirecting to login-page...')
-			return redirect('cv.views.myRemoteLogin')
+			log.info('Escaped path:')
+			escaped_path = urllib.quote(request.get_full_path())
+			log.info(escaped_path)
+			escaped_path = urllib.quote(escaped_path)
+			log.info(escaped_path)
+			return redirect( '/login/?path='+escaped_path )
 
-def loginUserWithToken(token, request):
+def unauthorizedResponse(request):
+	logout(request)
+	response = HttpResponseRedirect('https://' + request.get_host())
+	response.delete_cookie(key='whydahusertoken_sso')
+	response.delete_cookie(key='whydahusertoken_sso', path='/', domain=request.get_host() )
+	response.set_cookie('whydahusertoken_sso','')
+	response.status_code = 401
+	if request.method == 'GET':
+		redirect_url = 'https://' + request.get_host() + request.POST.get('path', '/')
+	else:
+		redirect_url = 'https://' + request.get_host()
+	return HttpResponseRedirect('error401')
 
-	token = ET.XML(token)
+def authNotAvailable(request):
+	return HttpResponseRedirect('error503')
+
+def loginUserWithToken(userToken, request):
+
+	userToken = ET.XML(userToken)
 
 	useremail = False
 	is_superuser = False
-	firstname = token.findtext('firstname')
-	lastname = token.findtext('lastname')
+	firstname = userToken.findtext('firstname')
+	lastname = userToken.findtext('lastname')
 
 	tokengroups = []
 
-	for application in token.iter('application'):
-		if application.find('applicationName').text == 'ACS':
+	for application in userToken.iter('application'):
+		if application.attrib['ID'] == APP_NAME:
 			for role in application.iter('role'):
 				rolename = role.get('name')
 				log.info('Role:')
@@ -81,7 +101,7 @@ def loginUserWithToken(token, request):
 					tokengroups.append(rolename)
 
 	if useremail:
-		user, created = User.objects.get_or_create(username = useremail, defaults={'email': useremail, 'first_name': firstname, 'last_name': lastname, 'is_staff': True})
+		user, created = User.objects.get_or_create(username__iexact = useremail, defaults={'username': useremail, 'email': useremail, 'first_name': firstname, 'last_name': lastname, 'is_staff': True})
 		currentgroups = user.groups.values_list('name', flat=True)
 		for groupname in tokengroups:
 			if groupname not in currentgroups:
@@ -108,6 +128,8 @@ def getAppToken(appID, appPass):
 	data = urllib.urlencode(values)
 	request = urllib2.Request(SSO_URL+'tokenservice/logon', data)
 	try:
+		log.info('Trying to get appToken')
+		log.info(values)
 		responsedata = urllib2.urlopen(request)
 		return responsedata.read()
 	except urllib2.URLError, e:
@@ -120,7 +142,7 @@ def getUserToken(appToken, idvalue, idtype):
 	if appToken:
 		appTokenID = appToken[ appToken.find('<applicationtokenID>')+len('<applicationtokenID>') : appToken.find('</applicationtokenID>') ]
 		#appid = ET.XML(responsedata).find('applicationtoken')
-		path = SSO_URL+'tokenservice/user/%s/get_usertoken_by_%s' % (appTokenID, idtype) # URL to be changed to 'getusertokenbyticket'
+		path = SSO_URL+'tokenservice/user/%s/get_usertoken_by_%s' % (appTokenID, idtype) 
 		values = { 'apptoken' : appToken, 'userticket' : idvalue }
 		data = urllib.urlencode(values)
 		request = urllib2.Request(path, data)
@@ -131,7 +153,6 @@ def getUserToken(appToken, idvalue, idtype):
 			log.error('URL-problem:')
 			log.error(e)
 			log.error(path)
-			return False
 	return False
 
 def getAppCredXML(appID, appPass):
