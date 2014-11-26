@@ -11,6 +11,7 @@ The ImplementationExamples includes example code for Whydah integration for:
 * Django
 * Microsoft Sharepoint.
 * Spring Security
+* Mobile / Phonegap
 
 ![Architectural Overview](https://raw2.github.com/altran/Whydah-SSOLoginWebApp/master/Whydah%20infrastructure.png)
 
