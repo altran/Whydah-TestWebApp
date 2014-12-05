@@ -156,6 +156,10 @@
                         <manifestEntries>
                             <Main-Class>net.whydah.sso.web.ServerRunner</Main-Class>
                         </manifestEntries>
+             <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
                     </archive>
                 </configuration>
             </plugin>
